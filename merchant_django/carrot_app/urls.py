@@ -7,7 +7,9 @@ from django.conf import settings
 
 urlpatterns = [
     path(r"", views.main, name="main"),
-    path(r"index", views.index, name="index"),
+    path(r"login", auth_views.LoginView.as_view(), name="login"),
+    path(r"logout", auth_views.LogoutView.as_view(), name="logout"),
+    path(r"register", views.register_view, name="register"),
     path(r"chat", views.chat, name="chat"),
     path(r"location", views.location, name="location"),
     path(r"search", views.search, name="search"),
@@ -15,5 +17,4 @@ urlpatterns = [
     path(r"trade_post", views.trade_post, name="trade_post"),
     path(r"write", views.write, name="write"),
     path(r"test", views.test, name="test"),
-    
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
