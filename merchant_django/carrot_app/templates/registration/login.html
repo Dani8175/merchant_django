@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}">
+    <title>login</title>
+</head>
+<body>
+    <h2>로그인</h2>
+    <div class="box">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="custom-errorlist"></div>
+            <button type="submit">로그인</button>
+        </form>
+    </div>
+</body>
+</html>
