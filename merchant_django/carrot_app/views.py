@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout,authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import SignUpForm
+from django.utils.html import strip_tags
 
 # Create your views here.
-
 
 
 def index(request):
@@ -43,7 +43,6 @@ def test(request):
     return render(request, "test.html")
 
 
-
 def register_view(request):
     form = UserCreationForm()
     if request.method == "POST":
@@ -59,36 +58,33 @@ def register_view(request):
     return render(
         request,
         "registration/register.html",
-        {"form": form, "error_message": form.errors.get("username", "").as_text()},
+        {"form": form, "error_message": strip_tags(form.errors.get("username", ""))},
     )
 
 
-def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect("main")
-            else:
-                form.add_error(None, "로그인에 실패했습니다.")
-    else:
-        form = AuthenticationForm(request)
-    return render(request, "login.html", {"form": form})
+# def login_view(request):
+#     if request.method == "POST":
+#         form = AuthenticationForm(request, data=request.POST)
+#         if form.is_valid():
+#                 login(request, user)
+#                 return redirect("main")
+#             else:
+#                 form.add_error(None, "로그인에 실패했습니다.")
+#     else:
+#         form = AuthenticationForm(request)
+#     return render(request, "login.html", {"form": form})
 
 
 def logout_request(request):
     logout(request)
     return redirect("main")
 
+
 def set_region_view(request):
-    if request.method == 'POST':
-        context = {'region' : request.POST['region-setting']}
-    return render(request, 'location.html', context)
+    if request.method == "POST":
+        context = {"region": request.POST["region-setting"]}
+    return render(request, "location.html", context)
+
 
 def set_region_certification(request):
     return render(request, "main.html")
-
