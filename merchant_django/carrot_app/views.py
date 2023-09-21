@@ -43,6 +43,7 @@ def test(request):
     return render(request, "test.html")
 
 
+
 def register_view(request):
     form = UserCreationForm()
     if request.method == "POST":
@@ -82,3 +83,12 @@ def login_view(request):
 def logout_request(request):
     logout(request)
     return redirect("main")
+
+def set_region_view(request):
+    if request.method == 'POST':
+        context = {'region' : request.POST['region-setting']}
+    return render(request, 'location.html', context)
+
+def set_region_certification(request):
+    return render(request, "main.html")
+
