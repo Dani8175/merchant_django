@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
-    <title>Document</title>
+    <title>회원가입</title>
   </head>
 
   <body class="back-ye">
@@ -22,15 +22,20 @@
           <form method="post" class="login-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="login-button">로그인</button>
+            <button type="submit" class="login-button">등록</button>
           </form>
           <p class="register-reco">
-            당근마켓 회원이 아니신가요?
-            <a href="{% url 'dangun_app:register' %}" class="bold">회원가입</a>
+            이미 계정이 있으신가요?
+            <a href="{% url 'dangun_app:login' %}" class="bold">로그인</a>
           </p>
         </div>
       {% endblock %}
     </div>
+    {% if error_message %}
+      <script>
+        alert('{{ error_message }}');
+      </script>
+    {% endif %}
   </body>
 
 </html>
