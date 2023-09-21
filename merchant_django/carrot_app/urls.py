@@ -15,5 +15,7 @@ urlpatterns = [
     path(r"trade_post", views.trade_post, name="trade_post"),
     path(r"write", views.write, name="write"),
     path(r"test", views.test, name="test"),
-    
+    path("set_region/", views.set_region_view, name="set_region"),
+    path('set_region_certification/', views.main,name="set_region_certification"),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
