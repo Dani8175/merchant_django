@@ -37,3 +37,11 @@ def write(request):
 
 def test(request):
     return render(request, "test.html")
+
+def set_region_view(request):
+    if request.method == 'POST':
+        context = {'region' : request.POST['region-setting']}
+    return render(request, 'location.html', context)
+
+def set_region_certification(request):
+    return render(request, "main.html")
