@@ -15,37 +15,17 @@ def rename_imagefile_to_uuid(instance, filename):
     return os.path.join(upload_to, filename)
 
 
-
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        # 이메일 필드를 정규화(normalize)하여 설정
-        email = self.normalize_email(email)
-
-        # 새 사용자 객체 생성
-        user = self.model(email=email, **extra_fields)
-
-        # 비밀번호 설정
+    def create_user(self, username, password=None, **extra_fields):
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
-
-        # 사용자 저장
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        # 일반 사용자를 생성하는 메서드를 호출하여 사용자 생성
-        user = self.create_user(email, password, **extra_fields)
-
-        # 슈퍼유저 관련 필드 설정
-        user.is_staff = True
-        user.is_superuser = True
-
-        # 사용자 저장
-        user.save(using=self._db)
-
-        return user
 
 class CustomUser(AbstractUser):
+    objects = CustomUserManager()
     region = models.CharField(max_length=30, null=True)
     # 추후 view에서 region 사용시
     # from django.contrib.auth.decorators import login_required
