@@ -4,7 +4,9 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import RegisterForm, LoginForm
 from django.utils.html import strip_tags
 from django.http import HttpResponse
-from .models import CustomUser
+from .models import *
+from django.db.models import Q
+import datetime
 
 # Create your views here.
 
@@ -26,15 +28,35 @@ def location(request):
 
 
 def search(request):
-    return render(request, "search.html")
+    search_query = request.GET.get("search")
+    searched_items = Item.objects.filter(
+        Q(title__icontains=search_query) | Q(hope_loc__icontains=search_query)
+    )
+    return render(
+        request, "search.html", {"search_query": search_query, "searched_items": searched_items}
+    )
 
 
 def trade(request):
-    return render(request, "trade.html")
+    posts = Item.objects.all()
+
+    return render(request, "trade.html", {"posts": posts})
 
 
-def trade_post(request):
-    return render(request, "trade_post.html")
+def trade_post(request, item_id):
+    item = Item.objects.get(item_id=item_id)
+
+    last_view_time_str = request.session.get(f"last_view_time_{item_id}")
+    current_time = datetime.datetime.now()
+
+    if not last_view_time_str or (
+        current_time - datetime.datetime.strptime(last_view_time_str, "%Y-%m-%d %H:%M:%S.%f")
+    ) >= datetime.timedelta(seconds=5):
+        item.views += 1
+        item.save()
+        request.session[f"last_view_time_{item_id}"] = current_time.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    return render(request, "trade_post.html", {"item": item})
 
 
 def write(request):
