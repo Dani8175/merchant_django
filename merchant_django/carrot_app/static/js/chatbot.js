@@ -1,57 +1,49 @@
-const chat_container = document.querySelector('.chatbot-container');
-const chat_circle = document.getElementById('chat-circle');
-const inputForm = document.getElementById('input-form');
-const inputField = document.getElementById('input-field');
-const conversation = document.getElementById('conversation');
+document.addEventListener("DOMContentLoaded", function () {
+    const chatContainer = document.querySelector(".chat-container");
+    const chatInput = document.querySelector(".chat-input textarea");
+    const submitButton = document.querySelector(".chat-input button");
 
-// 챗봇 토글 버튼 클릭 이벤트
-chat_circle.addEventListener('click', function () {
-    chat_container.style.display = 'block';
-    chat_circle.style.display = 'none';
-});
+    // 챗봇 메시지를 채팅 컨테이너에 추가하는 함수
+    function addMessage(message, isBot) {
+        const messageBox = document.createElement("div");
+        messageBox.className = isBot ? "message-box from-bot" : "message-box from-user";
+        messageBox.innerHTML = `
+        <div class="message-text">${message}</div>
+        <p class="s-text">${getCurrentTime()}</p>
+      `;
+        chatContainer.appendChild(messageBox);
 
-// 사용자 입력을 서버로 전송하고 챗봇 응답을 받아오는 함수
-function generateResponse(input) {
-    return fetch('http://oreumi-dangun.cyxsnajbfbeu.ap-northeast-2.rds.amazonaws.com/chatbot_response/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ question: input })
-    })
-        .then(response => response.json())
-        .then(data => data.response)
-        .catch(error => {
-            console.error(error);
-            return '챗봇이 응답하지 못했습니다.';
-        });
-}
+        // 챗 컨테이너의 하단으로 스크롤
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
-// 입력 폼 제출 이벤트
-inputForm.addEventListener('submit', function (event) {
-    event.preventDefault();
+    // 현재 시간을 가져오는 함수 (이 부분을 필요에 따라 변경할 수 있습니다)
+    function getCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        return `${hours}:${minutes}`;
+    }
 
-    const input = inputField.value;
+    // 사용자 입력을 처리하는 함수
+    function handleUserInput() {
+        const userMessage = chatInput.value;
+        addMessage(userMessage, false);
 
-    inputField.value = '';
-    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit" });
+        // 사용자 메시지를 서버로 보내고 (이 부분을 구현해야 합니다)
+        // 서버로부터 응답을 받거나 응답을 시뮬레이트합니다
+        const botResponse = "안녕하세요, 저는 챗봇입니다! 어떻게 도와드릴까요?";
+        setTimeout(function () {
+            addMessage(botResponse, true);
+        }, 1000); // 챗봇 응답을 시뮬레이트하기 위한 지연 시간 (조정 가능)
 
-    // 사용자 메시지를 대화창에 추가
-    const userMessage = document.createElement('div');
-    userMessage.classList.add('chatbot-message', 'user-message');
-    userMessage.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${input}</p>`;
-    conversation.appendChild(userMessage);
+        // 입력 필드를 지우기
+        chatInput.value = "";
+    }
 
-    // 챗봇 응답을 생성하고 대화창에 추가
-    generateResponse(input)
-        .then(response => {
-            const botMessage = document.createElement('div');
-            botMessage.classList.add('chatbot-message', 'chatbot');
-            botMessage.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${response}</p>`;
-            conversation.appendChild(botMessage);
-            botMessage.scrollIntoView({ behavior: "smooth" });
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    // 채팅 입력 양식 제출을 처리하는 이벤트 리스너
+    submitButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        handleUserInput();
+    });
 });
