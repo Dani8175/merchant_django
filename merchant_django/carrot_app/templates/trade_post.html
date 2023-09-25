@@ -46,14 +46,12 @@
             <div class="post-info-box">
               <div class="flex-box between">
                 <h3>{{ post.title }}</h3>
-                {% comment %} <h3>{{ post.price |intcomma}} {% endcomment %}
-                <h3>20000
-                                    원</h3>
+                <h3>{{ post.price }}
               </div>
-              <p>{{ post.description }}</p>
+              <p>{{ post.content }}</p>
               <div class="location-views-box flex-box between">
                 <p>희망 거래장소 |
-                  {{ post.location }}</p>
+                  {{ post.hope_loc }}</p>
                 <p>조회수
                   {{ post.view_num }}</p>
               </div>

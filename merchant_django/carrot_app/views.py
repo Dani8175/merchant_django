@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from .models import items
 
 # Create your views here.
 
@@ -32,7 +33,8 @@ def trade_post(request):
 
 
 def write(request):
-    return render(request, "write.html")
+    post = items.objects.all()
+    return render(request, "write.html", {"post": post})
 
 
 def test(request):

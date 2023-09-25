@@ -40,14 +40,14 @@
                 <div class="full-box">
                   <label for="description" class="block-box">물품 설명</label>
                   <textarea name="description" required="required">
-                    {% if post %}{{ post.description }}
+                    {% if post %}{{ post.content }}
                     {% endif %}
                   </textarea>
 
                 </div>
                 <div class="full-box">
                   <label for="location" class="block-box">거래 희망 장소</label>
-                  <input type="text" name="location" placeholder="거래를 희망하는 장소" required="required" value="{% if post %}{{ post.location }}{% endif %}">
+                  <input type="text" name="location" placeholder="거래를 희망하는 장소" required="required" value="{% if post %}{{ post.hope_loc }}{% endif %}">
                 </div>
                 <div class="submit-button-box">
                   {% if post %}
