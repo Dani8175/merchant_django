@@ -61,13 +61,12 @@ def trade_post(request, item_id):
 
 
 def write(request):
-    post = items.objects.all()
+    post = Item.objects.all()
     return render(request, "write.html", {"post": post})
 
 
 def test(request):
     return render(request, "test.html")
-
 
 
 def register_view(request):
