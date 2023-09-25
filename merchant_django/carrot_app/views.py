@@ -1,5 +1,6 @@
 from django import forms
 from django.shortcuts import render, redirect
+from .models import items
 from django.contrib.auth import login, logout, authenticate
 from .forms import RegisterForm, LoginForm
 from django.utils.html import strip_tags
@@ -60,11 +61,13 @@ def trade_post(request, item_id):
 
 
 def write(request):
-    return render(request, "write.html")
+    post = items.objects.all()
+    return render(request, "write.html", {"post": post})
 
 
 def test(request):
     return render(request, "test.html")
+
 
 
 def register_view(request):

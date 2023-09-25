@@ -25,6 +25,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
+
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
     region = models.CharField(max_length=30, null=True)
@@ -78,6 +79,18 @@ class Transaction(models.Model):
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False)
 
+
+
+class items(models.Model):
+    item_id = models.IntegerField(("ID"), primary_key=True)
+    title = models.CharField(max_length=70)
+    content = models.TextField()
+    price = models.IntegerField()
+    hope_loc = models.CharField(max_length=40)
+    category_id = models.IntegerField()
+    seller_id_id = models.BigIntegerField()
+
+
     # False 판매중, True 판매완료
     def __str__(self):
         return self.status
@@ -118,3 +131,4 @@ class Chat(models.Model):
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%-m-%-d %H:%M")})'
         else:
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%Y-%-m-%-d %H:%M")})'
+
