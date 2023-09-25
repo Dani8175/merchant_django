@@ -1,6 +1,5 @@
 from django import forms
 from django.shortcuts import render, redirect
-from .models import items
 from django.contrib.auth import login, logout, authenticate
 from .forms import RegisterForm, LoginForm
 from django.utils.html import strip_tags
