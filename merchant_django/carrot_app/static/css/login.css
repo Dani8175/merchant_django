@@ -8,14 +8,6 @@
 }
 
 
-.login-input{
-    width: -webkit-fill-available;
-    background-color: #fff;
-    border: 1px solid #fa6616;
-    border-radius: 100px;
-    padding: 13px;
-}
-
 .login-form{
     display: flex;
     flex-direction: column;
@@ -24,7 +16,19 @@
 
 .login-form label{
     display: block;
-    margin-bottom:12px
+    margin-bottom: 12px;
+}
+
+.login-form input{
+    width: -webkit-fill-available;
+    background-color: #fff;
+    border: 1px solid #fa6616;
+    border-radius: 100px;
+    padding: 13px 13px 13px 30px;
+}
+.login-form input::placeholder {
+    color: rgba(128, 128, 128, 0.719);
+
 }
 
 

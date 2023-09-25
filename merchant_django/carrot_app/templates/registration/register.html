@@ -15,27 +15,40 @@
   </head>
 
   <body class="back-ye">
-    {% include 'dangun_app/nav.html' %}
+    {% include 'nav.html' %}
     <div class="container">
       {% block content %}
         <div class="login-container">
           <form method="post" class="login-form">
-            {% csrf_token %}
-            {{ form.as_p }}
+            {% csrf_token %}         
+            {% if form.non_field_errors %}
+            <ul class="errorlist nonfield">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div>
+              <label for="username">아이디</label>
+              <input type="text" placeholder="아이디를 입력해주세요" id="username" name="username" required>
+            </div>
+            <div>
+              <label for="password">비밀번호</label>
+              <input type="password" placeholder="비밀번호를 입력해주세요" id="password"name="password" required>
+            </div>
+            <div>
+              <label for="confirm_password">비밀번호 확인</label>
+              <input type="password" placeholder="비밀번호를 다시 입력해주세요" id="confirm_password"name="confirm_password" required>
+            </div>
             <button type="submit" class="login-button">등록</button>
           </form>
           <p class="register-reco">
             이미 계정이 있으신가요?
-            <a href="{% url 'dangun_app:login' %}" class="bold">로그인</a>
+            <a href="{% url 'login' %}" class="bold">로그인</a>
           </p>
         </div>
       {% endblock %}
     </div>
-    {% if error_message %}
-      <script>
-        alert('{{ error_message }}');
-      </script>
-    {% endif %}
   </body>
 
 </html>
