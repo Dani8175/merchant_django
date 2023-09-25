@@ -1,6 +1,6 @@
-{% comment %} {% load custom_filter%} {% endcomment %}
+{% comment %} {% load custom_fillter%} {% endcomment %}
 {% load static %}
-{% comment %} {% load humanize %} {% endcomment %}
+{% load humanize %}
 <!DOCTYPE html>
 <html>
 
@@ -41,25 +41,28 @@
       <div class="full-box trade-box column">
         <div class="flex-box full-box card-container between">
           {% for post in posts %}
-
             <div class="card-box">
-              <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
+              {% comment %} {% if item_id %} {% endcomment %}
+              <a href="{% url 'trade_post' item_id=post.item_id %}" class="trade-text-link">
+                {% comment %} { % else %} {% endcomment %}
+                {% comment %} <a href="#"></a>
+                {% endif %} {% endcomment %}
                 <div class="card-img">
-                  {% if post.images %}
-                    <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                  {% if post.image_url %}
+                    <img src="{{ post.image_url }}" alt="{{ post.title }}">
                   {% endif %}
                 </div>
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
-                  {% comment %} <p class="bold">{{ post.price |intcomma}}원</p> {% endcomment %}
-                  <p class="bold">20000원</p>
-                  <p>{{ post.location }}</p>
+                  <p class="bold">{{ post.price |intcomma}}원</p>
+                  {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
+                  <p>{{ post.hope_loc }}</p>
                   <div class="flex-box">
                     <p>조회
-                      {{ post.view_num }}</p>
+                      {{ post.views }}</p>
                     <p>·</p>
                     <p>채팅
-                      {{ post.chat_num }}</p>
+                      {{ post.chat_count }}</p>
                   </div>
                 </div>
               </a>
