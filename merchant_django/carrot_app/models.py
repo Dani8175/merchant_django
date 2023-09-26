@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 def rename_imagefile_to_uuid(instance, filename):
-    upload_to = f"uploads"
+    upload_to = f""
     ext = filename.split(".")[-1]
     uuid = uuid4().hex
     filename = "{}.{}".format(uuid, ext)
@@ -48,9 +48,10 @@ class CustomUser(AbstractUser):
     #     db_table = "User"
 
 
-class items(models.Model):
+class Item(models.Model):
     item_id = models.AutoField(primary_key=True)
     seller_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    upload_date = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
     content = models.TextField()
     price = models.IntegerField()
@@ -80,7 +81,7 @@ class items(models.Model):
 class Transaction(models.Model):
     trans_id = models.AutoField(primary_key=True)
     buyer_name = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
-    item = models.ForeignKey(items, on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False)
 
     # False 판매중, True 판매완료
@@ -104,7 +105,7 @@ class Category(models.Model):
 
 class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
-    item = models.ForeignKey(items, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     content = models.TextField()
     sender = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name="sender_name")
     receiver = models.ForeignKey(
