@@ -1,5 +1,5 @@
 {% load static %}
-{% load humanize %}
+{% load custom_fillter %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +18,11 @@
   <body>
     {% include 'nav.html' %}
     <div class="post-box">
+      <a href="{% url 'write' %}">
+        <div class="floating-button">
+          거래글쓰기
+        </div>
+      </a> 
       <div class="container column center">
         <div class="container column center">
           <div class="full-box trade-box column">
@@ -31,12 +36,12 @@
                   {% endif %} {% endcomment %}
                   <div class="card-img">
                     {% if searched_item.image_url %}
-                      <img src="{{ searched_item.image_url }}" alt="{{ searched_item.title }}">
+                      <img src="{{ MEDIA_URL }}{{ searched_item.image_url }}" alt="{{ searched_item.title }}">
                     {% endif %}
                   </div>
                   <div class="card-info-box">
                     <h5>{{ searched_item.title }}</h5>
-                    <p class="bold">{{ searched_item.price |intcomma}}원</p>
+                    <p class="bold">{{ searched_item.price |add_commas}}원</p>
                     {% comment %} <p class="bold">{{ searched_item.price }}</p> {% endcomment %}
                     <p>{{ searched_item.hope_loc }}</p>
                     <div class="flex-box">
@@ -45,6 +50,9 @@
                       <p>·</p>
                       <p>채팅
                         {{ searched_item.chat_count }}</p>
+                    </div>
+                    <div>
+                      <p>{{ searched_item.upload_date|format_upload_date }}</p>
                     </div>
                   </div>
                 </a>

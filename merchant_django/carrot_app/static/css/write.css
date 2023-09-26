@@ -1,56 +1,56 @@
-body {
+body{
   background-color: #f8f9fa;
 }
 
-.about-trade {
-  flex-direction: column;
-  /* display: block; */
-  width: 1100px;
-  height: 900px;
-  top: 98px;
-  left: 120px;
-  border: 1px solid #dedede;
+
+.flex-box column baseline title-box input{
+  width: 300px;
+}
+
+.write-box{
+    background-color: #fff;
+    width: 100%;
+    padding: 56px;
+    border: 1px solid #dedede;
+    margin: 48px 0 0 0 ;
 
 }
 
-.write-box {
-  background-color: #fff;
-  width: 100%;
-  padding: 56px;
-  border: 1px solid #dedede;
-  margin: 48px 0 0 0;
-
-}
-
-.about-trade input,
-textarea {
+ .about-trade input, textarea{
   background-color: #f3f3f3;
   border: none;
   font-size: 16px;
-  padding: 8px 12px 8px 12px;
   width: -webkit-fill-available;
+  padding: 8px 12px 8px 12px;
 
 }
 
-label {
-  padding: 12px 0 4px 0;
+.flex-box-mid{
+  display: flex;
+  gap: 30px;
+}
+
+.description{
+  resize: none; /* 크기 조절 비활성화 */
+  height: 200px;
+}
+
+
+label{
+  padding: 20px 0 10px 0;
 }
 
 .img-upload {
-  top: 20px;
   border: 1px solid #dedede;
   width: 240px;
   height: 240px;
-  box-sizing: border-box;
+  box-sizing: border-box; /* 이 부분을 추가 */
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
-  border-radius: 10px;
-  left: 20px;
-  /* right: 200px; */
 }
 
 .img-upload-fit {
@@ -59,64 +59,19 @@ label {
   object-fit: cover;
 }
 
-.title-box {
+.title-box{
   padding: 0 0 0 20px;
+
 }
 
-.submit-button-box {
-  right: 20px;
-}
-
-.submit-button-box button {
+.submit-button-box button{
+  width:-webkit-fill-available;
+  margin-top: 40px;
   background-color: #fa6616;
+  border: none;
+  border-radius: 4px;
   color: #fff;
   font-weight: 700;
-  top: 823px;
-  left: 176px;
-  width: 1088px;
   height: 50px;
-  top: 823px;
-  left: 176px;
-  border-radius: 6px;
-  border: 1px;
-}
-
-.flex-box {
-  display: flex;
-}
-
-.title_price-box {
-  display: flex;
-  flex-direction: column;
-}
-
-.low-boxes {
-  display: flex;
-  flex-direction: column;
-}
-
-.discription-box {
-  width: 1070px;
-  padding: 10px;
-  margin-top: 20px;
-  top: 404px;
-  left: 176px;
-  gap: 2px
-}
-
-.discription {
-  height: 200px;
-}
-
-.locaction-box {
-  width: 1070px;
-  height: 100px;
-  padding: 10px;
-  top: 404px;
-  left: 176px;
-  gap: 2px
-}
-
-.container {
-  flex-direction: column;
+  padding: 12px 0;
 }

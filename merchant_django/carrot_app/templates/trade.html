@@ -1,6 +1,5 @@
-{% comment %} {% load custom_fillter%} {% endcomment %}
 {% load static %}
-{% load humanize %}
+{% load custom_fillter %}
 <!DOCTYPE html>
 <html>
 
@@ -20,7 +19,7 @@
         <div class="floating-button">
           거래글쓰기
         </div>
-      </a>
+      </a> 
       <div class="about-trade">
         <div class="container ">
           <div class="trade-text">
@@ -36,6 +35,17 @@
   <div class="post-box">
     <div class="container column center">
       <h1>중고거래 인기매물</h1>
+      <form method="GET" action="{% url 'trade' %}" style="padding-bottom: 30px;font-size: 18px;">
+        <label for="latest">
+        <input type="radio" id="latest" name="sort" value="latest" {% if sort == 'latest' %}checked{% endif %} onchange="this.form.submit()">
+        <span>최신순</span>
+      </label>
+      <label for="popular">
+        <input type="radio" id="popular" name="sort" value="popular" {% if sort == 'popular' %}checked{% endif %} onchange="this.form.submit()">
+        <span>인기순</span>
+      </label>
+      </form>
+      <radio name="radio"></radio>
     </div>
     <div class="container column center">
       <div class="full-box trade-box column">
@@ -49,12 +59,12 @@
                 {% endif %} {% endcomment %}
                 <div class="card-img">
                   {% if post.image_url %}
-                    <img src="{{ post.image_url }}" alt="{{ post.title }}">
+                    <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}">
                   {% endif %}
                 </div>
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price |intcomma}}원</p>
+                  <p class="bold">{{ post.price |add_commas}}원</p>
                   {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
                   <p>{{ post.hope_loc }}</p>
                   <div class="flex-box">
@@ -63,6 +73,9 @@
                     <p>·</p>
                     <p>채팅
                       {{ post.chat_count }}</p>
+                  </div>
+                  <div>
+                    <p>{{ post.upload_date|format_upload_date }}</p>
                   </div>
                 </div>
               </a>

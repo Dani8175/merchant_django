@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import CustomUser
+from .models import *
 
 
 class RegisterForm(forms.Form):
@@ -39,3 +39,10 @@ class LoginForm(forms.Form):
                 raise forms.ValidationError("아이디 또는 비밀번호를 다시 확인해 주세요")
 
         return cleaned_data
+
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ['title', 'price', 'content', 'hope_loc', 'image_url']

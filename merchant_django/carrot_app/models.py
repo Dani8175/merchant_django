@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 def rename_imagefile_to_uuid(instance, filename):
-    upload_to = f"uploads"
+    upload_to = f""
     ext = filename.split(".")[-1]
     uuid = uuid4().hex
     filename = "{}.{}".format(uuid, ext)
@@ -27,16 +27,14 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-    region = models.CharField(max_length=100, null=True)
-    region_certification = models.CharField(max_length=1, default='N')
+# 해당 테이블 사용 필요시 말해주세요
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+#     region = models.CharField(max_length=100, null=True)
+#     region_certification = models.CharField(max_length=1, default='N')
 
-    def __str__(self):
-        return f'{self.user.username} Profile'
-    
-
-
+#     def __str__(self):
+#         return f'{self.user.username} Profile'
 
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
@@ -47,7 +45,6 @@ class CustomUser(AbstractUser):
 
     class Meta:
         db_table = "User"
-
 
     # 추후 view에서 region 사용시
     # from django.contrib.auth.decorators import login_required
@@ -65,12 +62,19 @@ class CustomUser(AbstractUser):
 class Item(models.Model):
     item_id = models.AutoField(primary_key=True)
     seller_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    upload_date = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
     content = models.TextField()
     price = models.IntegerField()
     hope_loc = models.CharField(max_length=40, null=True)
     views = models.IntegerField(default=0)
-    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING,related_name='category_number',default=None,null=True)
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.DO_NOTHING,
+        related_name="category_number",
+        default=None,
+        null=True,
+    )
     image_url = models.FileField(upload_to=rename_imagefile_to_uuid, default="")
     chat_count = models.IntegerField(default=0)
 
@@ -131,4 +135,3 @@ class Chat(models.Model):
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%-m-%-d %H:%M")})'
         else:
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%Y-%-m-%-d %H:%M")})'
-

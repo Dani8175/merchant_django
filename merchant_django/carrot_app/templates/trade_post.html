@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/trade_post.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    
     <title>중고거래 상세보기</title>
   </head>
 
@@ -21,18 +22,50 @@
       <div class="container column">
         <div class="post-box">
           {% block content %}
-            <img src="{{ post.images.url }}" alt="{{ post.title }}" class="block-box">
+            <img src="{{ MEDIA_URL }}{{ item.image_url }}" alt="{{ item.title }}" class="block-box" style="padding-top:0">
             <div class="flex-box between info-button-box">
               <div class="user-info">
-                <h6>{{ post.user }}</h6>
-                <p>{{ post.location }}</p>
+                <h6>{{ item.seller_name }}</h6>
+                <p>{{ item.hope_loc }}</p>
               </div>
-              {% if request.user.username == post.user.username %}
+              {% if request.user == item.seller_name %}
                 <div class="flex-box button-box">
-                  <a href="{% url 'edit' post.id %}">
+                  <a>
+                    <button type="submit" class="black" id="delete-button1">삭제하기</button>
+                    
+                
+                    <div id="deleteModal" class="modal">
+                        <div class="modal-content">
+                          <h2>게시글 삭제 확인</h2>
+                          <p>삭제하면 되돌릴 수 없어요. <br>정말로 게시글을 삭제할까요?</p>
+                          <div class="modal-buttons">
+                            <form method="POST" action="{% url 'trade_post' item_id=item.item_id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete-button" id="delete-button" value="true">
+                                <button id="delete-button" class="btn">삭제</button>
+                            </form>
+                            <button id="deleteCancelBtn" class="btn">취소</button>
+                          </div>
+                        </div>
+                      </div>
+                      <script>
+                        // 삭제 버튼 클릭 시 모달 대화상자를 보여줍니다.
+                        document.getElementById('delete-button1').addEventListener('click', function(event) {
+                            event.preventDefault(); // 폼 제출을 막습니다.
+                            document.getElementById('deleteModal').style.display = 'block';
+                          });
+                        // 취소 버튼 클릭 시 모달 대화상자를 닫습니다.
+                        document.getElementById('deleteCancelBtn').addEventListener('click', function(event) {
+                          document.getElementById('deleteModal').style.display = 'none';
+                        });
+                        </script>
+                  </a>
+                  <a href="{% url 'edit' item_id=item.item_id %}">
                     <button class="grey">수정하기</button>
                   </a>
+                  <a href="{% url 'chat' %}"> 
                   <button class="orange">채팅보기</button>
+                  </a>
                 </div>
               {% else %}
                 <div class="button-box">
@@ -45,16 +78,21 @@
             <hr class="line">
             <div class="post-info-box">
               <div class="flex-box between">
-                <h3>{{ post.title }}</h3>
-                <h3>{{ post.price }}
+                <h3>{{ item.title }}</h3>
+                <h3>{{ item.price }}
               </div>
-              <p>{{ post.content }}</p>
+              <p>{{ item.content }}</p>
               <div class="location-views-box flex-box between">
                 <p>희망 거래장소 |
-                  {{ post.hope_loc }}</p>
+                  {{ item.hope_loc }}</p>
                 <p>조회수
-                  {{ post.view_num }}</p>
+                  {{ item.views }}</p>
               </div>
+            </div>
+            <hr class="line">
+            <div class="more_div">
+              <h8>당근 인기중고</h8>
+              <p class="more">더 구경하기</p>
             </div>
           {% endblock %}
         </div>
