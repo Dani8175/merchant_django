@@ -21,7 +21,7 @@
         {% block content %}
           <div class="about-trade">
             <div class="container">
-              {% comment %} <form class="write-box" method="POST" action="{% if post %}{% url 'edit' post.id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data"> {% endcomment %}
+              <form class="write-box" method="POST" action="{% if post %}{% url 'edit' post.id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex-box">
                   <label class="img-upload">

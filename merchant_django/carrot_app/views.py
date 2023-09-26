@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm
 from django.utils.html import strip_tags
 from django.http import HttpResponse
@@ -38,13 +39,13 @@ def search(request):
 
 
 def trade(request):
-    posts = Item.objects.all()
+    posts = items.objects.all()
 
     return render(request, "trade.html", {"posts": posts})
 
 
 def trade_post(request, item_id):
-    item = Item.objects.get(item_id=item_id)
+    item = items.objects.get(item_id=item_id)
 
     last_view_time_str = request.session.get(f"last_view_time_{item_id}")
     current_time = datetime.datetime.now()
@@ -60,7 +61,7 @@ def trade_post(request, item_id):
 
 
 def write(request):
-    post = Item.objects.all()
+    post = items.objects.all()
     return render(request, "write.html", {"post": post})
 
 

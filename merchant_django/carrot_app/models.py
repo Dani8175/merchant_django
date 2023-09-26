@@ -25,7 +25,6 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
     region = models.CharField(max_length=30, null=True)
@@ -35,7 +34,6 @@ class CustomUser(AbstractUser):
 
     class Meta:
         db_table = "User"
-
 
     # 추후 view에서 region 사용시
     # from django.contrib.auth.decorators import login_required
@@ -50,7 +48,7 @@ class CustomUser(AbstractUser):
     #     db_table = "User"
 
 
-class Item(models.Model):
+class items(models.Model):
     item_id = models.AutoField(primary_key=True)
     seller_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=70)
@@ -58,7 +56,13 @@ class Item(models.Model):
     price = models.IntegerField()
     hope_loc = models.CharField(max_length=40, null=True)
     views = models.IntegerField(default=0)
-    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING,related_name='category_number',default=None,null=True)
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.DO_NOTHING,
+        related_name="category_number",
+        default=None,
+        null=True,
+    )
     image_url = models.FileField(upload_to=rename_imagefile_to_uuid, default="")
     chat_count = models.IntegerField(default=0)
 
@@ -76,7 +80,7 @@ class Item(models.Model):
 class Transaction(models.Model):
     trans_id = models.AutoField(primary_key=True)
     buyer_name = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(items, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False)
 
     # False 판매중, True 판매완료
@@ -100,7 +104,7 @@ class Category(models.Model):
 
 class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(items, on_delete=models.CASCADE)
     content = models.TextField()
     sender = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name="sender_name")
     receiver = models.ForeignKey(
@@ -119,4 +123,3 @@ class Chat(models.Model):
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%-m-%-d %H:%M")})'
         else:
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%Y-%-m-%-d %H:%M")})'
-
