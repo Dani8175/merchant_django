@@ -14,13 +14,13 @@
   </head>
 
   <body class="back-ye">
-    {% comment %} {% if messages %}
+    {% if messages %}
       <div class="messages">
         {% for message in messages %}
           <div{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</div>
         {% endfor %}
       </div>
-    {% endif %} {% endcomment %}
+    {% endif %}
     {% include 'nav.html' %}
     <div class="content-box">
       <div class="container column center">
@@ -29,8 +29,8 @@
           <form method="POST" action="/set_region/" id="region-form">
             {% csrf_token %}
             <div class="flex-box full-box between region-input">
-              <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{{ region }}">
-              {% comment %} <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if region %}{{ region }}{% endif %}"> {% endcomment %}
+              {% comment %} <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{{ region }}"> {% endcomment %}
+              <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if region %}{{ region }}{% endif %}">
               <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
                 {% if region %}
                   수정
