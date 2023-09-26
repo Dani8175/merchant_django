@@ -19,7 +19,7 @@
         <div class="floating-button">
           거래글쓰기
         </div>
-      </a>
+      </a> 
       <div class="about-trade">
         <div class="container ">
           <div class="trade-text">
@@ -35,6 +35,17 @@
   <div class="post-box">
     <div class="container column center">
       <h1>중고거래 인기매물</h1>
+      <form method="GET" action="{% url 'trade' %}" style="padding-bottom: 30px;font-size: 18px;">
+        <label for="latest">
+        <input type="radio" id="latest" name="sort" value="latest" {% if sort == 'latest' %}checked{% endif %} onchange="this.form.submit()">
+        <span>최신순</span>
+      </label>
+      <label for="popular">
+        <input type="radio" id="popular" name="sort" value="popular" {% if sort == 'popular' %}checked{% endif %} onchange="this.form.submit()">
+        <span>인기순</span>
+      </label>
+      </form>
+      <radio name="radio"></radio>
     </div>
     <div class="container column center">
       <div class="full-box trade-box column">

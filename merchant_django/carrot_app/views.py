@@ -20,7 +20,7 @@ def index(request):
 
 
 def main(request):
-    posts = Item.objects.all()
+    posts = Item.objects.order_by("-views")
     return render(request, "main.html", {"posts": posts})
 
 
@@ -56,9 +56,24 @@ def search(request):
 
 
 def trade(request):
-    posts = Item.objects.all()
+    sort = request.GET.get("sort")  # sort 값 가져오기
 
-    return render(request, "trade.html", {"posts": posts})
+    # sort 값에 따른 처리 로직 작성
+    if sort == "latest":
+        # 최신순으로 정렬하는 로직 작성
+        posts = Item.objects.order_by("-upload_date")
+    elif sort == "popular":
+        # 인기순으로 정렬하는 로직 작성
+        posts = Item.objects.order_by("-views")
+    else:
+        # 기본 정렬 로직 작성 (예: ID 순서)
+        posts = Item.objects.all()
+
+    context = {
+        "sort": sort,
+        "posts": posts,
+    }
+    return render(request, "trade.html", context)
 
 
 def alert(request, alert_message):
@@ -77,6 +92,10 @@ def trade_post(request, item_id):
         item.views += 1
         item.save()
         request.session[f"last_view_time_{item_id}"] = current_time.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    if request.method == "POST":
+        item.delete()
+        return redirect("trade")
 
     return render(request, "trade_post.html", {"item": item})
 
@@ -107,8 +126,8 @@ def create_post(request):
     return render(request, "main.html", {"form": form})
 
 
-def edit(request, id):
-    post = get_object_or_404(Item, id=id)
+def edit(request, item_id):
+    post = get_object_or_404(Item, item_id=item_id)
     if post:
         post.content = post.content.strip()
     if request.method == "POST":
@@ -119,7 +138,7 @@ def edit(request, id):
         if "image_url" in request.FILES:
             post.image_url = request.FILES["image_url"]
         post.save()
-        return redirect("trade_post", item_id=post.id)
+        return redirect("trade_post", item_id=post.item_id)
 
     return render(request, "write.html", {"post": post})
 
