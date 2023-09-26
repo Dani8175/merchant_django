@@ -1,6 +1,5 @@
-{% comment %} {% load custom_fillter%} {% endcomment %}
 {% load static %}
-{% load humanize %}
+{% load custom_fillter %}
 <!DOCTYPE html>
 <html>
 
@@ -49,12 +48,12 @@
                 {% endif %} {% endcomment %}
                 <div class="card-img">
                   {% if post.image_url %}
-                    <img src="{{ post.image_url }}" alt="{{ post.title }}">
+                    <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}">
                   {% endif %}
                 </div>
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price |intcomma}}원</p>
+                  <p class="bold">{{ post.price |add_commas}}원</p>
                   {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
                   <p>{{ post.hope_loc }}</p>
                   <div class="flex-box">
@@ -63,6 +62,9 @@
                     <p>·</p>
                     <p>채팅
                       {{ post.chat_count }}</p>
+                  </div>
+                  <div>
+                    <p>{{ post.upload_date|format_upload_date }}</p>
                   </div>
                 </div>
               </a>
