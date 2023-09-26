@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/trade_post.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    
     <title>중고거래 상세보기</title>
   </head>
 
@@ -21,13 +22,13 @@
       <div class="container column">
         <div class="post-box">
           {% block content %}
-            <img src="{{ post.images.url }}" alt="{{ post.title }}" class="block-box">
+            <img src="{{ MEDIA_URL }}{{ item.images_url }}" alt="{{ item.title }}" class="block-box">
             <div class="flex-box between info-button-box">
               <div class="user-info">
-                <h6>{{ post.user }}</h6>
-                <p>{{ post.location }}</p>
+                <h6>{{ item.seller_name }}</h6>
+                <p>{{ item.hope_loc }}</p>
               </div>
-              {% if request.user.username == post.user.username %}
+              {% if request.user.username == post.hope_loc.username %}
                 <div class="flex-box button-box">
                   <a href="{% url 'edit' post.id %}">
                     <button class="grey">수정하기</button>
@@ -45,16 +46,21 @@
             <hr class="line">
             <div class="post-info-box">
               <div class="flex-box between">
-                <h3>{{ post.title }}</h3>
-                <h3>{{ post.price }}
+                <h3>{{ item.title }}</h3>
+                <h3>{{ item.price }}
               </div>
               <p>{{ post.content }}</p>
               <div class="location-views-box flex-box between">
                 <p>희망 거래장소 |
-                  {{ post.hope_loc }}</p>
+                  {{ item.hope_loc }}</p>
                 <p>조회수
-                  {{ post.view_num }}</p>
+                  {{ item.views }}</p>
               </div>
+            </div>
+            <hr class="line">
+            <div class="more_div">
+              <h8>당근 인기중고</h8>
+              <p class="more">더 구경하기</p>
             </div>
           {% endblock %}
         </div>
