@@ -56,7 +56,7 @@ def search(request):
 
 
 def trade(request):
-    posts = items.objects.all()
+    posts = Item.objects.all()
 
     return render(request, "trade.html", {"posts": posts})
 
