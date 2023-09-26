@@ -21,4 +21,5 @@ urlpatterns = [
     path("alert/<str:alert_message>/", views.alert, name="alert"),
     path("set_region/", views.set_region_view, name="set_region"),
     path("set_region_certification/", views.main, name="set_region_certification"),
+    path("account/", views.account, name="account"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

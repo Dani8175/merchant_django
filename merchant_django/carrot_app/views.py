@@ -67,6 +67,7 @@ def alert(request, alert_message):
 
 def trade_post(request, item_id):
     item = Item.objects.get(item_id=item_id)
+    user = CustomUser.objects.get(username=request.user)
 
     last_view_time_str = request.session.get(f"last_view_time_{item_id}")
     current_time = datetime.datetime.now()
@@ -175,3 +176,8 @@ def set_region_view(request):
 
 def set_region_certification(request):
     return render(request, "main.html")
+
+
+@login_required
+def account(request):
+    return render(request, "account.html")
