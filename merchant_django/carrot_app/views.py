@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
+from .forms import RegisterForm, LoginForm
 from .forms import PostForm, RegisterForm, LoginForm
 from django.utils.html import strip_tags
 from django.http import HttpResponse
@@ -55,7 +56,7 @@ def search(request):
 
 
 def trade(request):
-    posts = Item.objects.all()
+    posts = items.objects.all()
 
     return render(request, "trade.html", {"posts": posts})
 
