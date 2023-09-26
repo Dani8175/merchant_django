@@ -30,7 +30,7 @@
           <a href="{% url 'logout' %}" class="ghost-button">로그아웃</a>
 
         {% else %}
-          <a href="{% url 'login' %}" class="ghost-button" style="color: #1e1e1e">로그인</a>
+          <a href="{% url 'login' %}?next={{ request.path }}" class="ghost-button" style="color: #1e1e1e">로그인</a>
         {% endif %}
       </div>
     </div>

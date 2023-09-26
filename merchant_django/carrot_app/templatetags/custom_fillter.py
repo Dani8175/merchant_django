@@ -1,4 +1,7 @@
+
 from django import template
+from django.utils import timezone
+
 
 
 # from bs4 import BeautifulSoup
@@ -31,3 +34,33 @@ def get_img_src(value):
     if match:
         return match.group(1)
     return ""
+
+@register.filter
+def format_upload_date(upload_date):
+    now = timezone.now()
+    time_since = now - upload_date
+
+    if time_since.days >= 365:
+        return f"{time_since.days // 365}년 전"
+    elif time_since.days >= 30:
+        return f"{time_since.days // 30}달 전"
+    elif time_since.days >= 7:
+        return f"{time_since.days // 7}주 전"
+    elif time_since.days > 0:
+        return f"{time_since.days}일 전"
+    elif time_since.seconds >= 3600:
+        return f"{time_since.seconds // 3600}시간 전"
+    elif time_since.seconds >= 60:
+        return f"{time_since.seconds // 60}분 전"
+    else:
+        return "방금 전"
+
+@register.filter
+def add_commas(number):
+    original_str = str(number)
+    parts = []
+    while len(original_str) > 3:
+        parts.append(original_str[-3:])
+        original_str = original_str[:-3]
+    parts.append(original_str)
+    return ','.join(reversed(parts))

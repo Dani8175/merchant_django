@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>당근</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      alert('{{ alert_message }}');
+      let loginUrl = '{% url "login" %}';
+      let locationUrl = '{% url "location" %}';
+      const alert_message = '{{ alert_message }}'
+
+      if (alert_message.includes('로그인')) {
+        window.location.href = loginUrl;
+      } else {
+        window.location.href = locationUrl;
+      }
+    </script>
+  </body>
+
+</html>
