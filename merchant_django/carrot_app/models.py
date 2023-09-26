@@ -6,6 +6,8 @@ from uuid import uuid4
 import os
 from datetime import datetime
 
+from django.conf import settings
+
 
 def rename_imagefile_to_uuid(instance, filename):
     upload_to = f"uploads"
@@ -23,6 +25,16 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    region = models.CharField(max_length=100, null=True)
+    region_certification = models.CharField(max_length=1, default='N')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+    
 
 
 

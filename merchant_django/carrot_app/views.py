@@ -8,6 +8,10 @@ from .models import *
 from django.db.models import Q
 import datetime
 
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -23,8 +27,20 @@ def chat(request):
     return render(request, "chat.html")
 
 
+# def location(request):
+#     return render(request, "location.html")
+
+
+# 동네 인증
+@login_required
 def location(request):
-    return render(request, "location.html")
+    try:
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        region = user_profile.region
+    except UserProfile.DoesNotExist:
+        region = None
+
+    return render(request, 'location.html', {'region': region})
 
 
 def search(request):
@@ -106,11 +122,40 @@ def logout_request(request):
     return redirect("main")
 
 
-def set_region_view(request):
+# def set_region_view(request):
+#     if request.method == "POST":
+#         context = {"region": request.POST["region-setting"]}
+#     return render(request, "location.html", context)
+
+
+
+
+@login_required
+def set_region(request):
     if request.method == "POST":
-        context = {"region": request.POST["region-setting"]}
-    return render(request, "location.html", context)
+        region = request.POST.get('region-setting')
+
+        if region:
+            try:
+                user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+                user_profile.region = region
+                user_profile.save()
+
+                return redirect('location')
+            except Exception as e:
+                return JsonResponse({"status": "error", "message": str(e)})
+        else:
+            return JsonResponse({"status": "error", "message": "Region cannot be empty"})
+    else:
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
 
+
+# 동네인증 완료
+@login_required
 def set_region_certification(request):
-    return render(request, "main.html")
+    if request.method == "POST":
+        request.user.profile.region_certification = 'Y'
+        request.user.profile.save()
+        messages.success(request, "인증되었습니다")
+        return redirect("location")
