@@ -47,7 +47,7 @@ if (navigator.geolocation) {
           if (currentLocationArray.includes(lastRegionPart)) {
             regionJudgeText.innerText = "현재 위치가 내 동네 설정과 같습니다.";
           } else {
-            // regionJudgeText.innerText = "현재 위치가 내 동네 설정과 다릅니다.";
+            regionJudgeText.innerText = "현재 위치가 내 동네 설정과 다릅니다.";
             regionSaveButton.classList.toggle("button-disabled");
           }
         }
