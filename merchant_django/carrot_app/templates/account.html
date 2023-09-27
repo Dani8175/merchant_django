@@ -50,6 +50,17 @@
                 </div>
             </div>
         </div>
+        <h1>내 게시물 목록</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+            </li>
+        {% empty %}
+            <li>작성한 게시물이 없습니다.</li>
+        {% endfor %}
+    </ul>
     </main>
 </body>
 
