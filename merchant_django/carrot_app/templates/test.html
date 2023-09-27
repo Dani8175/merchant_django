@@ -102,9 +102,7 @@
 </head>
 
 <body>
-  <div class="chat-container" id="chatContainer">
-    <!-- Chat messages will appear here -->
-  </div>
+  <div class="chat-container" id="chatContainer"></div>
   <div class="chat-input-container">
     <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
     <button class="send-button" id="sendButton">Send</button>
@@ -114,60 +112,62 @@
     const chatInput = document.getElementById('chatInput');
     const sendButton = document.getElementById('sendButton');
 
-    const ws = new WebSocket(`ws://${window.location.host}/ws/chat/merchant/`);
+    let sender = null; // 사용자명 초기화
 
-    ws.onopen = () => {
-      console.log('Connected to the chat server.');
-    };
+    async function getSenderName() {
+      while (!sender) {
+        sender = prompt('Please enter your name:');
+        if (!sender) {
+          alert('Name cannot be empty. Please enter your name.');
+        }
+        await new Promise(resolve => setTimeout(resolve, 100)); // 100ms 지연
+      }
+    }
 
-    ws.onmessage = (event) => {
-      const messageData = JSON.parse(event.data);
-      displayMessage('Other', messageData.message);
-    };
+    getSenderName().then(() => {
+      // 사용자명이 입력되면 이 부분이 실행됩니다.
+      const roomName = 'merchant';  // 방 이름 설정
 
-    ws.onclose = () => {
-      console.log('Disconnected from the chat server.');
-    };
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+      const ws = new WebSocket(`${wsProtocol}://${window.location.host}/ws/chat/${roomName}/`);
 
-    sendButton.addEventListener('click', () => {
-      sendMessage();
-    });
+      ws.onopen = () => {
+        console.log('Connected to the chat server.');
+      };
 
-    chatInput.addEventListener('keypress', (event) => {
-      if (event.key === 'Enter') {
+      ws.onmessage = (event) => {
+        const messageData = JSON.parse(event.data);
+        displayMessage(messageData.sender, messageData.message);
+      };
+
+      ws.onclose = () => {
+        console.log('Disconnected from the chat server.');
+      };
+
+      sendButton.addEventListener('click', () => {
         sendMessage();
+      });
+
+      chatInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          sendMessage();
+        }
+      });
+
+      function sendMessage() {
+        const message = chatInput.value.trim();
+        if (message) {
+          ws.send(JSON.stringify({ 'message': message, 'sender': sender, 'receiver': 'Receiver' }));
+          chatInput.value = '';
+        }
+      }
+
+      function displayMessage(sender, message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatContainer.appendChild(messageDiv);
       }
     });
-
-    function sendMessage() {
-      const message = chatInput.value.trim();
-      if (message) {
-        ws.send(JSON.stringify({ 'message': message, 'sender': 'Me' }));
-        chatInput.value = '';
-      }
-    }
-
-    function displayMessage(sender, message) {
-      const messageContainer = document.createElement('div');
-      messageContainer.classList.add('message-container');
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', sender.toLowerCase());
-      messageDiv.innerHTML = `
-        <div class="message-text">${message}</div>
-        <div class="message-time">${getCurrentTime()}</div>
-      `;
-
-      messageContainer.appendChild(messageDiv);
-      chatContainer.appendChild(messageContainer);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function getCurrentTime() {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      return `${hours}:${minutes}`;
-    }
   </script>
 </body>
 
