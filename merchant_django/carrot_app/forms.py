@@ -32,7 +32,7 @@ class LoginForm(forms.Form):
         username = cleaned_data.get("username")
         password = cleaned_data.get("password")
 
-        if username and password:  # 아이디와 비밀번호가 모두 입력되었을 경우
+        if (username and password) or (username and not password) or (not username and password) or (not username and not password):  # 아이디와 비밀번호가 모두 입력되었을 경우
             user = CustomUser.objects.filter(username=username).first()  # DB에서 해당 아이디의 유저를 조회
 
             if not user or not user.check_password(password):

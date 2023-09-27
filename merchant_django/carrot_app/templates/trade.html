@@ -51,36 +51,41 @@
       <div class="full-box trade-box column">
         <div class="flex-box full-box card-container between">
           {% for post in posts %}
-            <div class="card-box">
-              {% comment %} {% if item_id %} {% endcomment %}
-              <a href="{% url 'trade_post' item_id=post.item_id %}" class="trade-text-link">
-                {% comment %} { % else %} {% endcomment %}
-                {% comment %} <a href="#"></a>
-                {% endif %} {% endcomment %}
-                <div class="card-img">
-                  {% if post.image_url %}
-                    <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}">
-                  {% endif %}
+          <div class="card-box">
+            <a href="{% url 'trade_post' item_id=post.item_id %}" class="trade-text-link">
+              <div class="card-img">
+                {% if post.image_url %}
+                  <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="base-image">
+                  <img src="{% static "img/end.png" %}" class="overlay-image" id="overlay-image-{{ post.item_id }}">
+                {% endif %}
+                {% if post.is_end %}
+                <script>
+                  document.querySelector('#overlay-image-{{ post.item_id }}').style.display = 'block';
+                </script>
+                {% else %}
+                <script>
+                  document.querySelector('#overlay-image-{{ post.item_id }}').style.display = 'none';
+                </script>
+                {% endif %}
+              </div>
+              <div class="card-info-box">
+                <h5>{{ post.title }}</h5>
+                <p class="bold">{{ post.price |add_commas}}원</p>
+                <p>{{ post.hope_loc }}</p>
+                <div class="flex-box">
+                  <p>조회
+                    {{ post.views }}</p>
+                  <p>·</p>
+                  <p>채팅
+                    {{ post.chat_count }}</p>
                 </div>
-                <div class="card-info-box">
-                  <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price |add_commas}}원</p>
-                  {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
-                  <p>{{ post.hope_loc }}</p>
-                  <div class="flex-box">
-                    <p>조회
-                      {{ post.views }}</p>
-                    <p>·</p>
-                    <p>채팅
-                      {{ post.chat_count }}</p>
-                  </div>
-                  <div>
-                    <p>{{ post.upload_date|format_upload_date }}</p>
-                  </div>
+                <div>
+                  <p>{{ post.upload_date|format_upload_date }}</p>
                 </div>
-              </a>
-            </div>
-          {% endfor %}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
 
         </div>
       </div>
