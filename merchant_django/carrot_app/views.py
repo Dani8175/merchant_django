@@ -24,7 +24,7 @@ def index(request):
 
 
 def main(request):
-    posts = Item.objects.order_by("-views")
+    posts = Item.objects.filter(is_end=False).order_by("-views")
     return render(request, "main.html", {"posts": posts})
 
 
