@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from uuid import uuid4
 import os
 from datetime import datetime
@@ -26,13 +27,17 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
+
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
+    )
     region = models.CharField(max_length=100, null=True)
-    region_certification = models.CharField(max_length=1, default='N')
+    region_certification = models.CharField(max_length=1, default="N")
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f"{self.user.username} Profile"
+
 
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
@@ -75,7 +80,7 @@ class Item(models.Model):
     chat_count = models.IntegerField(default=0)
     is_end = models.BooleanField(default=False)
     # False 판매중, True 판매완료
-    
+
     def update_chat_count(self):
         self.chat_count = Chat.objects.filter(item=self).count()
         self.save()
@@ -91,7 +96,6 @@ class Transaction(models.Model):
     trans_id = models.AutoField(primary_key=True)
     buyer_name = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-
 
     def __str__(self):
         return self.status

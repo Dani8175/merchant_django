@@ -219,8 +219,8 @@ def set_region(request):
                 customuser.region = region
                 customuser.save()
 
-                #return render(request, "location.html", {"customuser": customuser})
-                return redirect('location')
+                # return render(request, "location.html", {"customuser": customuser})
+                return redirect("location")
             except Exception as e:
                 return JsonResponse({"status": "error", "message": str(e)})
         else:
@@ -242,4 +242,5 @@ def set_region_certification(request):
 
 @login_required
 def account(request):
-    return render(request, "account.html")
+    posts = Item.objects.filter(seller_name=request.user)
+    return render(request, "account.html", {"posts": posts})
