@@ -40,9 +40,9 @@ def chat(request):
 @login_required
 def location(request):
     try:
-        user_profile = UserProfile.objects.get(user_id=request.user)
+        user_profile = CustomUser.objects.get(username=request.user)
         region = user_profile.region
-    except UserProfile.DoesNotExist:
+    except CustomUser.DoesNotExist:
         region = None
 
     return render(request, "location.html", {"region": region})
@@ -219,7 +219,8 @@ def set_region(request):
                 customuser.region = region
                 customuser.save()
 
-                return render(request, "location.html", {"customuser": customuser})
+                #return render(request, "location.html", {"customuser": customuser})
+                return redirect('location')
             except Exception as e:
                 return JsonResponse({"status": "error", "message": str(e)})
         else:
@@ -236,7 +237,7 @@ def set_region_certification(request):
         # request.user.profile.save()
         messages.success(request, "인증되었습니다")
         return redirect("location")
-    return render(request, "main.html")
+    # return render(request, "main.html")
 
 
 @login_required
