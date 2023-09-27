@@ -242,11 +242,5 @@ def set_region_certification(request):
 
 @login_required
 def account(request):
-    return render(request, "account.html")
-
-
-@login_required
-def user_posts(request, username):
-    user = get_object_or_404(CustomUser, username=username)
-    posts = Item.objects.filter(seller_name_id=user.id)
+    posts = Item.objects.filter(seller_name=request.user)
     return render(request, "account.html", {"posts": posts})

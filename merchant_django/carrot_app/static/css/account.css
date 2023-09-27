@@ -82,3 +82,8 @@ button {
     background-color: #fa6616;
     border-radius: 5px;
 }
+
+.content_list {
+    display: flex;
+    justify-content: center;
+}

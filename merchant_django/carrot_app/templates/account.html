@@ -1,5 +1,6 @@
 {% load static%}
 {% load custom_fillter %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +15,30 @@
 </head>
 
 <body>
+    <style>
+        .post-list {
+            list-style: none;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            padding: 10px !important;
+            margin: 0 200px;
+            justify-content: center;
+        }
+
+        .post-card {
+            width: 300px !important;
+            margin-right: 20px !important;
+            padding: 10px !important;
+            border: 1px solid #ccc !important;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .card-img img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+    </style>
     {% include 'nav.html' %}
     <main>
         <div class="content_box">
@@ -43,24 +68,35 @@
                                 style="display: block;" /></button>
                     </div>
                 </div>
-                <div>
-                    <div class="logout_div">
-                        <button href="{% url 'logout' %}" class="logout" type="button" style="margin: auto; border-style: none;" >로그아웃</button>
-                    </div>
-                </div>
             </div>
         </div>
-        <h1>내 게시물 목록</h1>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <h2>{{ post.title }}</h2>
-                <p>{{ post.content }}</p>
-            </li>
-        {% empty %}
-            <li>작성한 게시물이 없습니다.</li>
-        {% endfor %}
-    </ul>
+        <div style="margin-top: 70px;">
+            <h1 class="content_list">내 게시물 목록</h1>
+            <ul class="post-list">
+                {% for post in posts %}
+                    <li class="post_card">
+                        <div class="card-img">
+                            {% if post.image_url %}
+                            <img src="{{ item.image_url }}" alt="{{ post.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="card-info-box">
+                            <h5>{{ post.title }}</h5>
+                            <p class="bold">{{ post.price |intcomma}}원</p>
+                            {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
+                            <p>{{ post.hope_loc }}</p>
+                            <div class="flex-box">
+                            <p>조회
+                                {{ post.views }}</p>
+                            <p>·</p>
+                            <p>채팅
+                                {{ post.chat_count }}</p>
+                    </li>
+                {% empty %}
+                    <li>작성한 게시물이 없습니다.</li>
+                {% endfor %}
+            </ul>
+        </div>
     </main>
 </body>
 
