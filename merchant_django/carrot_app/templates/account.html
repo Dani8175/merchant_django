@@ -22,7 +22,7 @@
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
             padding: 10px !important;
-            margin: 0 200px;
+            margin: 0 100px;
             justify-content: center;
         }
 
@@ -33,10 +33,20 @@
             border: 1px solid #ccc !important;
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1) !important;
         }
-        
-        .card-img img {
-            max-width: 100% !important;
-            height: auto !important;
+
+        .pic{
+            width: 200px;
+            height: 200px;
+            {% comment %} margin-right: 1000px;
+            margin-left: 100px    {% endcomment %}
+        }
+
+        .post-container{    
+            display: flex;
+            width: 100%; /* 너비를 100%로 설정하여 화면 폭에 맞게 만듭니다. */
+            overflow-x: auto; /* 가로 스크롤을 활성화합니다. */
+            white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+            margin-top: 50px;
         }
     </style>
     {% include 'nav.html' %}
@@ -72,29 +82,38 @@
         </div>
         <div style="margin-top: 70px;">
             <h1 class="content_list">내 게시물 목록</h1>
-            <ul class="post-list">
-                {% for post in posts %}
-                    <li class="post_card">
-                        <div class="card-img">
-                            {% if post.image_url %}
-                            <img src="{{ item.image_url }}" alt="{{ post.title }}">
-                            {% endif %}
-                        </div>
-                        <div class="card-info-box">
-                            <h5>{{ post.title }}</h5>
-                            <p class="bold">{{ post.price |intcomma}}원</p>
-                            {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
-                            <p>{{ post.hope_loc }}</p>
-                            <div class="flex-box">
-                            <p>조회
-                                {{ post.views }}</p>
-                            <p>·</p>
-                            <p>채팅
-                                {{ post.chat_count }}</p>
-                    </li>
-                {% empty %}
-                    <li>작성한 게시물이 없습니다.</li>
-                {% endfor %}
+            <ul class="post-list" >
+                <div class="post-container">
+                    {% for post in posts %}
+                        <li class="post_card" style="display: flex; align-items: center;">
+                                <a href="{% url 'trade_post' item_id=post.item_id %}" style="color: black; text-decoration: none;">
+                                <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="pic" style="padding-top:0">
+                                {% comment %} <img src="{% static "img/end-post.png" %}" class=""> {% endcomment %}
+                                <script>
+                                    var overlay = document.querySelector('#overlay-{{ post.id }}');
+                                    {% if post.is_end %}
+                                        overlay.style.display = 'block';
+                                    {% else %}
+                                        overlay.style.display = 'none';
+                                    {% endif %}
+                                </script>
+                            <div class="card-info-box" style="text-align: center; margin:80px;">
+                                <h5>{{ post.title }}</h5>
+                                <p class="bold">{{ post.price |intcomma}}원</p>
+                                {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
+                                <p>{{ post.hope_loc }}</p>
+                                <div class="flex-box">
+                                <p style="font-size: 20px;">조회
+                                    {{ post.views }}</p>
+                                <p>·</p>
+                                <p style="font-size: 20px;">채팅
+                                    {{ post.chat_count }}</p>
+                                </a>
+                        </li>
+                    {% empty %}
+                        <li>작성한 게시물이 없습니다.</li>
+                    {% endfor %}
+                </div>
             </ul>
         </div>
     </main>
