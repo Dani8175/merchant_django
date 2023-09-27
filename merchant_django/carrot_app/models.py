@@ -73,7 +73,9 @@ class Item(models.Model):
     )
     image_url = models.FileField(upload_to=rename_imagefile_to_uuid, default="")
     chat_count = models.IntegerField(default=0)
-
+    is_end = models.BooleanField(default=False)
+    # False 판매중, True 판매완료
+    
     def update_chat_count(self):
         self.chat_count = Chat.objects.filter(item=self).count()
         self.save()
@@ -89,9 +91,8 @@ class Transaction(models.Model):
     trans_id = models.AutoField(primary_key=True)
     buyer_name = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-    status = models.BooleanField(default=False)
 
-    # False 판매중, True 판매완료
+
     def __str__(self):
         return self.status
 
