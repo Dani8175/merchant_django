@@ -21,7 +21,17 @@
         {% block content %}
           <div class="about-trade">
             <div class="container">
-              <form class="write-box" method="POST" action="{% if post %}{% url 'edit' item_id=post.item_id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data">
+              <script>
+                function validateForm() {
+                  var imageField = document.querySelector('input[type="file"][name="image_url"]');
+                  if (imageField.files.length === 0) {
+                    alert('이미지를 선택해주세요.');
+                    return false; // 폼 전송 막기
+                  }
+                  return true; // 폼 전송 허용
+                }
+              </script>
+              <form class="write-box" method="POST" action="{% if post %}{% url 'edit' item_id=post.item_id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data" onsubmit="{% if not post %}return validateForm();{% endif %}">
                 {% csrf_token %}
                 <div class="flex-box-mid">
                   <label class="img-upload">
