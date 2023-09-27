@@ -1,78 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chat</title>
-    <style>
-      body {
-        font-family: 'Arial, sans-serif';
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-container {
+      width: 400px;
+      height: 500px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      margin: 50px auto 0;
+      padding: 10px;
+      overflow-y: scroll;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .chat-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .chat-input {
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .send-button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .send-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* 추가된 스타일 */
+    .message-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    .message.me {
+      align-self: flex-end;
+      background-color: #007BFF;
+      color: #fff;
+      text-align: right;
+    }
+
+    .message.other {
+      align-self: flex-start;
+      background-color: #f2f2f2;
+      color: #333;
+      text-align: left;
+    }
+
+    .message-text {
+      font-size: 16px;
+    }
+
+    .message-time {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-container" id="chatContainer">
+    <!-- Chat messages will appear here -->
+  </div>
+  <div class="chat-input-container">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+    <button class="send-button" id="sendButton">Send</button>
+  </div>
+  <script>
+    const chatContainer = document.getElementById('chatContainer');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+
+    const ws = new WebSocket(`ws://${window.location.host}/ws/chat/merchant/`);
+
+    ws.onopen = () => {
+      console.log('Connected to the chat server.');
+    };
+
+    ws.onmessage = (event) => {
+      const messageData = JSON.parse(event.data);
+      displayMessage('Other', messageData.message);
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from the chat server.');
+    };
+
+    sendButton.addEventListener('click', () => {
+      sendMessage();
+    });
+
+    chatInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        sendMessage();
       }
+    });
 
-      .chat-container {
-        width: 300px;
-        height: 500px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        overflow-y: scroll;
-        margin: 50px auto 0;
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message) {
+        ws.send(JSON.stringify({ 'message': message, 'sender': 'Me' }));
+        chatInput.value = '';
       }
+    }
 
-      .chat-input {
-        width: 100%;
-        border: 1px solid #ccc;
-        padding: 10px;
-      }
+    function displayMessage(sender, message) {
+      const messageContainer = document.createElement('div');
+      messageContainer.classList.add('message-container');
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', sender.toLowerCase());
+      messageDiv.innerHTML = `
+        <div class="message-text">${message}</div>
+        <div class="message-time">${getCurrentTime()}</div>
+      `;
 
-      .chat-input-container {
-        position: fixed;
-        bottom: 0;
-        width: 300px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 10px;
-      }
-    </style>
-  </head>
+      messageContainer.appendChild(messageDiv);
+      chatContainer.appendChild(messageContainer);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
-  <body>
-
-    <div class="chat-container" id="chatContainer">
-      <!-- Chat messages will appear here -->
-    </div>
-
-    <div class="chat-input-container">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
-    </div>
-
-    <script>
-      const chatContainer = document.getElementById('chatContainer');
-      const chatInput = document.getElementById('chatInput');
-
-      const ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/');
-
-      ws.onopen = () => {
-        console.log('Connected to the chat server.');
-      };
-
-      ws.onmessage = (event) => {
-        const messageData = JSON.parse(event.data);
-        chatContainer.innerHTML += `<div>${messageData.message}</div>`;
-      };
-
-      ws.onclose = () => {
-        console.log('Disconnected from the chat server.');
-      };
-
-      chatInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter' && chatInput.value) {
-          ws.send(JSON.stringify({'message': chatInput.value}));
-          chatInput.value = '';
-        }
-      });
-    </script>
-
-  </body>
+    function getCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    }
+  </script>
+</body>
 
 </html>

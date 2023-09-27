@@ -2,6 +2,11 @@ body{
   background-color: #f8f9fa;
 }
 
+
+.flex-box column baseline title-box input{
+  width: 300px;
+}
+
 .write-box{
     background-color: #fff;
     width: 100%;
@@ -15,13 +20,24 @@ body{
   background-color: #f3f3f3;
   border: none;
   font-size: 16px;
-  padding: 8px 12px 8px 12px;
   width: -webkit-fill-available;
+  padding: 8px 12px 8px 12px;
 
 }
 
+.flex-box-mid{
+  display: flex;
+  gap: 30px;
+}
+
+.description{
+  resize: none; /* 크기 조절 비활성화 */
+  height: 200px;
+}
+
+
 label{
-  padding: 12px 0 4px 0;
+  padding: 20px 0 10px 0;
 }
 
 .img-upload {
@@ -45,6 +61,7 @@ label{
 
 .title-box{
   padding: 0 0 0 20px;
+
 }
 
 .submit-button-box button{
@@ -55,5 +72,6 @@ label{
   border-radius: 4px;
   color: #fff;
   font-weight: 700;
+  height: 50px;
   padding: 12px 0;
 }

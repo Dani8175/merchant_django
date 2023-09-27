@@ -1,12 +1,11 @@
-{% load static%}
-{% comment %} {% load humanize %} {% endcomment %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}" />
@@ -21,11 +20,9 @@
   <div class="content-box">
     <div class="container column">
       <div class="post-box flex-box">
-
         <!-- 채팅선택창 -->
         <div class="chat-select-container">
           <div class="flex-box">
-
             <!-- 아이디및 체크박스 -->
             <div class="id-box flex-box between">
               아이디
@@ -37,11 +34,10 @@
               </div>
             </div>
           </div>
-
           <!-- 채팅 리스트 -->
           <div class="chat-list-box flex-box column">
-            <!-- 봇 -->
-            <div class="chat-box flex-box">
+            <!-- 봇 클릭 시 채팅창 열기 -->
+            <div class="chat-box flex-box ai-chat-button">
               <div class="ai-profile">
                 <img src="{% static 'img/icon_aibot.png'%}" alt="">
               </div>
@@ -50,8 +46,8 @@
                 <p class="chat-thumb-text">궁금한 내용을 물어보세요!</p>
               </div>
             </div>
-            <!-- 채팅방리스트 -->
-            <div class="flex-box chat-box between">
+            <!-- 상대방 아이디 클릭 시 채팅창 열기 -->
+            <div class="flex-box chat-box between user-chat-button" data-user-id="상대방 아이디">
               <div>
                 <div class="flex-box">
                   <p class="bold">상대방아이디</p>
@@ -66,17 +62,16 @@
             </div>
           </div>
         </div>
-
         <!-- 채팅창-->
         <div class="chat-main-container">
           <div>
             <div class="contact-info flex-box">
-              상대방아이디
+              <div class="user-id-placeholder"> <!-- 사용자 아이디를 표시할 곳 -->
+              </div>
               <div class="temp">
                 36.9도
               </div>
             </div>
-
             <!--물품정보-->
             <div class="goods-box flex-box between">
               <div class="flex-box">
@@ -90,20 +85,11 @@
               </div>
               <button>거래완료</button>
             </div>
-
             <!--채팅창 메인-->
             <div class="chat-container">
-              <div class="message-box from-you">
-                <div class="message-text">입금확인했습니다~</div>
-                <p class="s-text">오전 8:20</p>
-              </div>
-              <div class="message-box from-me">
-                <p class="s-text">오전 8:20</p>
-                <div class="message-text">네 좋은물건 감사합니다~</div>
-              </div>
+              <!-- 메시지가 표시될 곳 -->
             </div>
           </div>
-
           <form class="chat-input" action="submit">
             <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
             <div>
@@ -115,8 +101,75 @@
     </div>
   </div>
   {% include 'footer.html' %}
-
 </body>
 <script src="{% static 'js/chatbot.js' %}"></script>
+<script>
+  const chatForm = document.querySelector(".chat-input");
+  const messageInput = chatForm.querySelector("textarea");
+  const chatBox = document.querySelector(".chat-container");
+
+  document.querySelectorAll(".user-chat-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const userId = button.getAttribute("data-user-id");
+      const validUserId = userId.replace(/[^a-zA-Z0-9-_.]/g, '');
+      const redirectURL = "http://127.0.0.1:8000/test";
+
+      // 페이지 리디렉션
+      window.location.href = redirectURL;
+
+      // 채팅창 상단에 사용자 아이디를 표시
+      const userIdPlaceholder = document.querySelector(".user-id-placeholder");
+      userIdPlaceholder.textContent = validUserId;
+
+      // WebSocket 채팅 연결 URL을 생성합니다.
+      const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/test/`);
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const message = data.message;
+
+        // 받은 메시지를 채팅창에 표시
+        const messageBox = document.createElement("div");
+        messageBox.classList.add("message-box");
+        messageBox.classList.add("from-other");
+        messageBox.innerHTML = `
+          <div class="message-text">${message}</div>
+          <p class="s-text">${getCurrentTime()}</p>
+        `;
+        chatBox.appendChild(messageBox);
+      };
+
+      chatSocket.onclose = function (e) {
+        console.error("WebSocket closed unexpectedly");
+      };
+
+      chatForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const message = messageInput.value.trim();
+        if (message) {
+          chatSocket.send(JSON.stringify({ message: message }));
+          messageInput.value = "";
+
+          // 보낸 메시지를 채팅창에 표시
+          const messageBox = document.createElement("div");
+          messageBox.classList.add("message-box");
+          messageBox.classList.add("from-me");
+          messageBox.innerHTML = `
+            <p class="s-text">${getCurrentTime()}</p>
+            <div class="message-text">${message}</div>
+          `;
+          chatBox.appendChild(messageBox);
+        }
+      });
+    });
+  });
+
+  function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+</script>
 
 </html>

@@ -42,7 +42,16 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "carrot_app",
+    "channels",
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
+ASGI_APPLICATION = "merchant_django.routing.application"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

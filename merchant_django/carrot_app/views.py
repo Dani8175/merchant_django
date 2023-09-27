@@ -12,6 +12,10 @@ import datetime
 from django.utils.timesince import timesince
 
 
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -20,7 +24,7 @@ def index(request):
 
 
 def main(request):
-    posts = Item.objects.all()
+    posts = Item.objects.order_by("-views")
     return render(request, "main.html", {"posts": posts})
 
 
@@ -28,8 +32,20 @@ def chat(request):
     return render(request, "chat.html")
 
 
+# def location(request):
+#     return render(request, "location.html")
+
+
+# 동네 인증
+@login_required
 def location(request):
-    return render(request, "location.html")
+    try:
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        region = user_profile.region
+    except UserProfile.DoesNotExist:
+        region = None
+
+    return render(request, 'location.html', {'region': region})
 
 
 def search(request):
@@ -56,9 +72,24 @@ def search(request):
 
 
 def trade(request):
-    posts = Item.objects.all()
+    sort = request.GET.get("sort")  # sort 값 가져오기
 
-    return render(request, "trade.html", {"posts": posts})
+    # sort 값에 따른 처리 로직 작성
+    if sort == "latest":
+        # 최신순으로 정렬하는 로직 작성
+        posts = Item.objects.order_by("-upload_date")
+    elif sort == "popular":
+        # 인기순으로 정렬하는 로직 작성
+        posts = Item.objects.order_by("-views")
+    else:
+        # 기본 정렬 로직 작성 (예: ID 순서)
+        posts = Item.objects.all()
+
+    context = {
+        "sort": sort,
+        "posts": posts,
+    }
+    return render(request, "trade.html", context)
 
 
 def alert(request, alert_message):
@@ -78,6 +109,10 @@ def trade_post(request, item_id):
         item.views += 1
         item.save()
         request.session[f"last_view_time_{item_id}"] = current_time.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    if request.method == "POST":
+        item.delete()
+        return redirect("trade")
 
     return render(request, "trade_post.html", {"item": item})
 
@@ -108,8 +143,8 @@ def create_post(request):
     return render(request, "main.html", {"form": form})
 
 
-def edit(request, id):
-    post = get_object_or_404(Item, id=id)
+def edit(request, item_id):
+    post = get_object_or_404(Item, item_id=item_id)
     if post:
         post.content = post.content.strip()
     if request.method == "POST":
@@ -120,7 +155,7 @@ def edit(request, id):
         if "image_url" in request.FILES:
             post.image_url = request.FILES["image_url"]
         post.save()
-        return redirect("trade_post", item_id=post.id)
+        return redirect("trade_post", item_id=post.item_id)
 
     return render(request, "write.html", {"post": post})
 
@@ -168,16 +203,47 @@ def logout_request(request):
     return redirect("main")
 
 
-def set_region_view(request):
+# def set_region_view(request):
+#     if request.method == "POST":
+#         context = {"region": request.POST["region-setting"]}
+#     return render(request, "location.html", context)
+
+
+
+
+@login_required
+def set_region(request):
     if request.method == "POST":
-        context = {"region": request.POST["region-setting"]}
-    return render(request, "location.html", context)
+        region = request.POST.get('region-setting')
+
+        if region:
+            try:
+                user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+                user_profile.region = region
+                user_profile.save()
+
+                return redirect('location')
+            except Exception as e:
+                return JsonResponse({"status": "error", "message": str(e)})
+        else:
+            return JsonResponse({"status": "error", "message": "Region cannot be empty"})
+    else:
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
 
+
+# 동네인증 완료
+@login_required
 def set_region_certification(request):
+    if request.method == "POST":
+        request.user.profile.region_certification = 'Y'
+        request.user.profile.save()
+        messages.success(request, "인증되었습니다")
+        return redirect("location")
     return render(request, "main.html")
 
 
 @login_required
 def account(request):
     return render(request, "account.html")
+
