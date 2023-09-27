@@ -25,7 +25,12 @@
     <div class="content-box">
       <div class="container column center">
         <div class="region-setting-box full-box">
-          <label for="region-setting">내 동네 설정</label>
+          {% if region %}
+            <label for="region-setting">내 동네 설정</label>
+          {% else %}
+            <label for="region-setting">어디에 살고 계신가요?</label>
+          {% endif %}
+          {% comment %} <label for="region-setting">내 동네 설정</label> {% endcomment %}
           <form method="POST" action="/set_region/" id="region-form">
             {% csrf_token %}
             <div class="flex-box full-box between region-input">
@@ -33,9 +38,9 @@
               <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if region %}{{ region }}{% endif %}">
               <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
                 {% if region %}
-                  수정
+                  내 동네 저장
                 {% else %}
-                  저장
+                  내 동네 설정
                 {% endif %}
               </button>
 
