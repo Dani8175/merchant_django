@@ -22,7 +22,10 @@ urlpatterns = [
     path(r"write/", views.write, name="write"),
     path(r"test/", views.test, name="test"),
     path("alert/<str:alert_message>/", views.alert, name="alert"),
-    path('set_region/', views.set_region, name='set_region'),
-    path('set_region_certification/', views.set_region_certification, name='set_region_certification'),
+    path("set_region/", views.set_region, name="set_region"),
+    path(
+        "set_region_certification/", views.set_region_certification, name="set_region_certification"
+    ),
     path("account/", views.account, name="account"),
+    path("post/<int:item_id>/", views.trade_post, name="trade_post"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
