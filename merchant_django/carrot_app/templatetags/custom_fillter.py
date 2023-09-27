@@ -1,7 +1,5 @@
-
 from django import template
 from django.utils import timezone
-
 
 
 # from bs4 import BeautifulSoup
@@ -35,6 +33,7 @@ def get_img_src(value):
         return match.group(1)
     return ""
 
+
 @register.filter
 def format_upload_date(upload_date):
     now = timezone.now()
@@ -55,6 +54,7 @@ def format_upload_date(upload_date):
     else:
         return "방금 전"
 
+
 @register.filter
 def add_commas(number):
     original_str = str(number)
@@ -63,4 +63,10 @@ def add_commas(number):
         parts.append(original_str[-3:])
         original_str = original_str[:-3]
     parts.append(original_str)
-    return ','.join(reversed(parts))
+    return ",".join(reversed(parts))
+
+
+@register.filter(name="mask_and_truncate_password")
+def mask_and_truncate_password(password, length=4):
+    masked_password = "*" * len(password)
+    return masked_password[:length]

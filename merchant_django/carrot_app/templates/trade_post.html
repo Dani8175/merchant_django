@@ -1,5 +1,5 @@
 {% load static%}
-{% comment %} {% load humanize %} {% endcomment %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +26,7 @@
             <div class="flex-box between info-button-box">
               <div class="user-info">
                 <h6>{{ item.seller_name }}</h6>
-                <p>{{ item.hope_loc }}</p>
+                <p>{{ user.region }}</p>
               </div>
               {% if request.user == item.seller_name %}
                 <div class="flex-box button-box">
@@ -79,7 +79,7 @@
             <div class="post-info-box">
               <div class="flex-box between">
                 <h3>{{ item.title }}</h3>
-                <h3>{{ item.price }}
+                <h3>{{ item.price |intcomma }} 원
               </div>
               <p>{{ item.content }}</p>
               <div class="location-views-box flex-box between">
@@ -89,17 +89,14 @@
                   {{ item.views }}</p>
               </div>
             </div>
-            <hr class="line">
-            <div class="more_div">
-              <h8>당근 인기중고</h8>
-              <p class="more">더 구경하기</p>
-            </div>
+            
+            
           {% endblock %}
         </div>
       </div>
     </div>
     {% include 'footer.html' %}
-
+    
   </body>
 
 </html>

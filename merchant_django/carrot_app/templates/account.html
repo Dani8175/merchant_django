@@ -1,0 +1,56 @@
+{% load static%}
+{% load custom_fillter %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>account</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/account.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}" />
+</head>
+
+<body>
+    {% include 'nav.html' %}
+    <main>
+        <div class="content_box">
+            <h1 class="account_h1">계정</h1>
+            <div class="account_info">
+                <div class="main_info">
+                    <h2>계정정보</h2>
+                </div>
+                <div class="account_namebox">
+                    <div style="text-align: center; display: flex; justify-content: space-between;">
+                        <div style="display: inline-block;">
+                            <p class="exclude" >{{ user.username }}</p>
+                        </div>
+                        <button style="border-style: none; ">
+                            <img class="change" src="{% static 'img/change.png' %}" alt="change"
+                                style="display: block;" /></button>
+                    </div>
+
+                </div>
+                <div>
+                    <div style="text-align: center; display: flex; justify-content: space-between;">
+                        <div style="display: inline-block;">
+                            <p class="exclude" >비밀번호: {{ user.password|mask_and_truncate_password:4 }} </p>
+                        </div>
+                        <button style="border-style: none;">
+                            <img class="change" src="{% static 'img/change.png' %}" alt="change"
+                                style="display: block;" /></button>
+                    </div>
+                </div>
+                <div>
+                    <div class="logout_div">
+                        <button href="{% url 'logout' %}" class="logout" type="button" style="margin: auto; border-style: none;" >로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
