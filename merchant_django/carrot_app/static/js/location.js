@@ -17,7 +17,7 @@ if (navigator.geolocation) {
     let lon = position.coords.longitude; // 경도
 
     let locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-      message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용입니다
+      message = '<div style="padding:5px;">현재 위치<div>'; // 인포윈도우에 표시될 내용입니다
 
     // 마커와 인포윈도우를 표시합니다
     displayMarker(locPosition, message);
@@ -80,10 +80,28 @@ function displayMarker(locPosition, message) {
   });
 
   // 인포윈도우를 마커위에 표시
-  infowindow.open(map, marker);
+  /* infowindow.open(map, marker); */
 
   // 지도 중심좌표를 접속위치로 변경
   map.setCenter(locPosition);
+  
+
+  var circle = new kakao.maps.Circle({
+      map: map,
+      center : locPosition,
+      radius: 1000,   // 원의 크기조절
+      strokeWeight: 0.5, //테두리 선 굵기
+      strokeColor: '#0066FF', // 테두리 선 색
+      strokeOpacity: 1,
+      strokeStyle: 'solid', //실선은 dashed
+      fillColor: '#00EEEE', 
+      fillOpacity: 0.2, //채우기 불투명도 
+  });
+
+  // 지도에 원을 표시합니다 
+  circle.setMap(map); 
+
+
 }
 
 document.getElementById("region-form").addEventListener("submit", function (e) {
