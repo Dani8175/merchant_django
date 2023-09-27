@@ -53,8 +53,6 @@ class CustomUser(AbstractUser):
     #     custom_user = user.customuser
     #     custoum_user.region = #gps기반 위치 ##시 ##구 ##동
     #     custom_user.save()
-    # class Meta:
-    #     db_table = "User"
 
 
 class Item(models.Model):

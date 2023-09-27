@@ -30,9 +30,9 @@
             {% csrf_token %}
             <div class="flex-box full-box between region-input">
               {% comment %} <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{{ region }}"> {% endcomment %}
-              <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if region %}{{ region }}{% endif %}">
+              <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if customuser.region %}{% endif %}">
               <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
-                {% if region %}
+                {% if customuser.region %}
                   수정
                 {% else %}
                   저장

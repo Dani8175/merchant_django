@@ -45,7 +45,7 @@ def location(request):
     except UserProfile.DoesNotExist:
         region = None
 
-    return render(request, 'location.html', {'region': region})
+    return render(request, "location.html", {"region": region})
 
 
 def search(request):
@@ -209,20 +209,18 @@ def logout_request(request):
 #     return render(request, "location.html", context)
 
 
-
-
 @login_required
 def set_region(request):
     if request.method == "POST":
-        region = request.POST.get('region-setting')
+        region = request.POST.get("region-setting")
 
         if region:
             try:
-                user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-                user_profile.region = region
-                user_profile.save()
+                customuser, created = CustomUser.objects.get_or_create(username=request.user)
+                customuser.region = region
+                customuser.save()
 
-                return redirect('location')
+                return render(request, "location.html", {"customuser": customuser})
             except Exception as e:
                 return JsonResponse({"status": "error", "message": str(e)})
         else:
@@ -231,13 +229,12 @@ def set_region(request):
         return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
 
-
 # 동네인증 완료
 @login_required
 def set_region_certification(request):
     if request.method == "POST":
-        request.user.profile.region_certification = 'Y'
-        request.user.profile.save()
+        # request.user.profile.region_certification = "Y"
+        # request.user.profile.save()
         messages.success(request, "인증되었습니다")
         return redirect("location")
     return render(request, "main.html")
@@ -246,4 +243,3 @@ def set_region_certification(request):
 @login_required
 def account(request):
     return render(request, "account.html")
-
