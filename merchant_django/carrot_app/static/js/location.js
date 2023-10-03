@@ -9,6 +9,7 @@ let mapContainer = document.getElementById("map"),
 
 let map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 
+
 // HTML5의 geolocation으로 사용할 수 있는지 확인
 if (navigator.geolocation) {
   // GeoLocation을 이용해서 접속 위치를 얻어옵니다
@@ -68,7 +69,21 @@ if (navigator.geolocation) {
 // 지도에 마커와 인포윈도우를 표시하는 함수
 function displayMarker(locPosition, message) {
   // 마커 생성
-  let marker = new kakao.maps.Marker({ map: map, position: locPosition });
+
+  // 마커 이미지를 생성합니다
+  let imageSrc = "/static/img/Location.png"; // 마커이미지의 주소입니다
+  
+  imageSize = new kakao.maps.Size(65, 65), // 마커이미지의 크기입니다
+  imageOption = {offset : new kakao.maps.Point(27, 69)}; 
+  // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+  let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+  // 마커를 생성합니다
+  let marker = new kakao.maps.Marker({ 
+    map: map, 
+    position: locPosition,
+    image: markerImage // 마커이미지 설정  
+  });
 
   let iwContent = message, // 인포윈도우에 표시할 내용
     iwRemoveable = true;
