@@ -3,16 +3,16 @@
   #chat-circle {
     position: fixed;
     bottom: 50px;
-    right: 50px;
-    background: #1e1e1e;
-    width: 80px;
-    height: 80px;
+    right: 150px;
+    background: white;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     color: white;
     padding: 28px;
     cursor: pointer;
     box-shadow: 0px 3px 16px 0px rgba(0, 0, 0, 0.6), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    background-image: url('../img/logo.png');
+    background-image: url('/static/img/icon_aibot.png');
     background-position: center;
     background-repeat: no-repeat;
   }
@@ -175,38 +175,6 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-
-  .chatbot-message {
-    display: flex;
-    align-items: flex-start;
-    position: relative;
-    font-size: 16px;
-    line-height: 20px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    max-width: 70%;
-    padding: 10px 15px;
-    margin-top: 10px;
-    background-color: orange;
-    border-radius: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .user-message,
-  .user-message .user-text {
-    align-self: flex-end;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    line-height: 20px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    max-width: 70%;
-    padding: 10px 15px;
-    margin-top: 10px;
-    border-radius: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
 </style>
 <div class="footer">
   <div class="container flex-box between">
@@ -233,68 +201,91 @@
 </div>
 
 <!-- 추가된 챗봇 창 -->
-<div class="chatbot-container" id="chatbot-container" style="display: none;">
+<div id="chat-circle">
+  <div id="chat-overlay"></div>
+</div>
+<div class="chatbot-container" style="display:none;">
   <div id="header">
-    <h1>AI 챗봇</h1>
+    <h1>AI 당근</h1>
     <p id="header-close">X</p>
   </div>
   <div id="chatbot">
     <div id="conversation">
-      <!-- 대화 내용이 표시될 곳 -->
+      <div class="chatbot-message">
+        <p class="chatbot-text">안녕하세요 AI당근입니다</p>
+      </div>
     </div>
     <form id="input-form">
       <message-container>
-        <input id="input-field" type="text" placeholder="메시지를 입력하세요">
-        <button id="submit-button" type="submit">전송</button>
+        <input id="input-field" type="text" placeholder="Type your message here">
+        <button id="submit-button" type="submit">
+        </button>
       </message-container>
+
     </form>
   </div>
+
 </div>
 <script>
-  // 챗봇 버튼을 클릭하여 챗봇 창 열기
-  document.getElementById("chatbot-button").addEventListener("click", function () {
-    document.getElementById("chatbot-container").style.display = "block";
+  const csrftoken = "{{ csrf_token }}";
+</script>
+<script>
+  const chat_circle = document.getElementById('chat-circle');
+  const chat_container = document.querySelector('.chatbot-container');
+  const header_close = document.getElementById('header-close');
+  const chatbot = document.getElementById('chatbot');
+  const conversation = document.getElementById('conversation');
+  const inputForm = document.getElementById('input-form');
+  const inputField = document.getElementById('input-field');
+
+  chat_circle.addEventListener('click', function () {
+    chat_container.style.display = 'block';
+    chat_circle.style.display = 'none';
+  })
+
+  header_close.addEventListener('click', function () {
+    chat_container.style.display = 'none';
+    chat_circle.style.display = 'block';
+  })
+
+
+  inputForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const input = inputField.value;
+
+    inputField.value = '';
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit" });
+
+    let message = document.createElement('div');
+    message.classList.add('chatbot-message', 'user-message');
+    message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${input}</p>`;
+    conversation.appendChild(message);
+
+    generateResponse(input)
+      .then(response => {
+        message = document.createElement('div');
+        message.classList.add('chatbot-message', 'chatbot');
+        message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${response['response']}</p>`;
+        conversation.appendChild(message);
+        message.scrollIntoView({ behavior: "smooth" });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   });
 
-  // 챗봇 창 닫기 버튼 클릭 이벤트 핸들러
-  document.getElementById("header-close").addEventListener("click", function () {
-    document.getElementById("chatbot-container").style.display = "none";
-  });
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const inputField = document.getElementById("input-field");
-    const submitButton = document.getElementById("submit-button");
-    const conversation = document.getElementById("conversation");
-
-    // 사용자 메시지를 화면에 표시하는 함수
-    function addUserMessage(message) {
-      const userMessage = document.createElement("div");
-      userMessage.className = "user-message";
-      userMessage.innerText = message;
-      conversation.appendChild(userMessage);
-    }
-
-    // 챗봇 메시지를 화면에 표시하는 함수
-    function addChatbotMessage(message) {
-      const chatbotMessage = document.createElement("div");
-      chatbotMessage.className = "chatbot-message";
-      chatbotMessage.innerText = message;
-      conversation.appendChild(chatbotMessage);
-    }
-
-    // 사용자가 메시지를 전송할 때의 이벤트 핸들러
-    document.getElementById("input-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const userMessage = inputField.value;
-      if (userMessage.trim() === "") return;
-      addUserMessage(userMessage);
-      inputField.value = "";
-
-      // 임시로 챗봇 응답 예제를 표시
-      setTimeout(function () {
-        const chatbotResponse = "안녕하세요 무엇을 도와드릴까요?";
-        addChatbotMessage(chatbotResponse);
-      }, 1000);
+  async function generateResponse(input) {
+    const response = await fetch('/execute_chatbot/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: JSON.stringify({ question: input }),
     });
-  });
+
+    const data = await response.json();
+    return data;
+  }
 </script>

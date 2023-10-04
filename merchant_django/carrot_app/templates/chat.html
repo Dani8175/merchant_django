@@ -150,8 +150,8 @@
   const chatBox = document.querySelector(".chat-container");
 
   // 사용자 아이디와 WebSocket 경로 설정
-  const userId = "국왕"; // 사용자 아이디 설정
-  const wsPath = `ws://${window.location.host}/ws/chat/test/`;
+  const userId = "admin"; // 사용자 아이디를 공란으로 설정
+  const wsPath = `ws://${window.location.host}/ws/chat/`;
 
   // WebSocket 연결
   const chatSocket = new WebSocket(wsPath);
