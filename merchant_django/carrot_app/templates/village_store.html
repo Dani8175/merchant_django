@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/village_store.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=services"></script>
+    <title>village_store</title>
+</head>
+
+<body>
+    {% include 'nav.html' %}
+
+    <div style="display: flex;flex-direction: column;">
+        <div>
+            <section class="title_background">
+                <div style="margin-top: 60px;">
+                    <h1 class="title_h1" style="order: 1">동네 이웃들이
+                        <br>
+                        자주가는 동네 가게
+                    </h1>
+                    <span class="title  _span"
+                        style="display: block; margin: 1rem 0 0; margin-left: 203px; font-size: 22px;line-height: normal;">
+                        우리동네 사람들이
+                        <br>
+                        이용하는 가게를 찾아보세요.
+                    </span>
+                    <div>
+                        <span class="title_img">
+                            <img class="nearby_stores" src="{% static 'img/nearby_stores_hero_image.png' %}"
+                                alt="배너 이미지">
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="main" style="order: 2;">
+            <section style="margin-top: 35px;">
+                <h2 class="main_h2">다양한 동네 가게를 볼 수 있어요</h2>
+                <div class="menu_div" style="">
+                    <ul class="menu1">
+                        <li>
+                            <label class="menu_label" style="background-color: #303030; color: #f8f9fa;">전체
+                                <input class="menu_input">
+                            </label>
+                        </li>
+                        <li>
+                            <label class="menu_label">식당
+                                <input type="radio" class="menu_input">
+                            </label>
+                        </li>
+                        <li>
+                            <label class="menu_label">카페
+                                <input type="radio" class="menu_input">
+                            </label>
+                        </li>
+                        <li>
+                            <label class="menu_label">용달/이사
+                                <input type="radio" class="menu_input">
+                            </label>
+                        </li>
+                        <li>
+                            <label class="menu_label">뷰티/미용
+                                <input type="radio" class="menu_input">
+                            </label>
+                        </li>
+                        <li>
+                            <label class="menu_label1">헬스/필라테스/요가
+                                <input type="radio" class="menu_input" style="width: 180px;">
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="menu2">
+                        <a>
+                            <div>
+                                <div>
+                                    <img>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </a>
+                    </ul>
+                </div>
+                <div id="modal" class="modal">
+                    <div id="modal-content" class="modal-content">
+                        <!-- 모달 내용이 여기에 표시됩니다 -->
+                        <span id="close-modal" class="close">&times;</span>
+                    </div>
+                </div>
+                <div id="map"></div>
+            </section>
+        </div>
+    </div>
+    <!-- <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=LIBRARY"></script> -->
+
+    <!-- <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=services,clusterer,drawing"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+</body>
+
+</html>

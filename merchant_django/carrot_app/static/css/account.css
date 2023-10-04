@@ -12,17 +12,8 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 200px;
     width: 30;
 }
-
-.account_h1 {
-    margin-right: 420px;
-    color: #fa6616;
-
-}
-
-.account_info {}
 
 .account_info> :not(:first-child) {
     border-bottom: 1px solid #fa6616;

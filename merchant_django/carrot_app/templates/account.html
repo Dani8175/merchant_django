@@ -22,7 +22,7 @@
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
             padding: 10px !important;
-            margin: 0 100px;
+            margin: 0 170px;
             justify-content: center;
         }
 
@@ -48,10 +48,32 @@
             white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
             margin-top: 50px;
         }
+        
+        .flex-box>a{
+            display:flex;
+            margin: auto;
+        }
+
+        li.post_card{
+            display:flex;
+            flex-direction:column
+        }
+
+        .account_h1 {
+            color: #fa6616;
+            margin: auto;
+        }
+
+        .content_list{
+            border-bottom: 1px solid #313131;
+            width: fit-content;
+            padding: 0px 30px;
+            margin: 0 auto;
+        }
     </style>
     {% include 'nav.html' %}
     <main>
-        <div class="content_box">
+        <div class="content_box" style="margin-bottom: -30px; margin-top: 100px;">
             <h1 class="account_h1">계정</h1>
             <div class="account_info">
                 <div class="main_info">
@@ -60,32 +82,26 @@
                 <div class="account_namebox">
                     <div style="text-align: center; display: flex; justify-content: space-between;">
                         <div style="display: inline-block;">
-                            <p class="exclude" >{{ user.username }}</p>
+                            <p class="exclude" >ID:   {{ user.username }}</p>
                         </div>
-                        <button style="border-style: none; ">
-                            <img class="change" src="{% static 'img/change.png' %}" alt="change"
-                                style="display: block;" /></button>
                     </div>
 
                 </div>
                 <div>
                     <div style="text-align: center; display: flex; justify-content: space-between;">
                         <div style="display: inline-block;">
-                            <p class="exclude" >비밀번호: {{ user.password|mask_and_truncate_password:4 }} </p>
+                            <p class="exclude" >PS:   {{ user.password|mask_and_truncate_password:8 }} </p>
                         </div>
-                        <button style="border-style: none;">
-                            <img class="change" src="{% static 'img/change.png' %}" alt="change"
-                                style="display: block;" /></button>
                     </div>
                 </div>
             </div>
         </div>
         <div style="margin-top: 70px;">
-            <h1 class="content_list">내 게시물 목록</h1>
+            <h1 class="content_list" style="color: #fa6616; margin-bottom:-40px;">내 게시물 목록</h1>
             <ul class="post-list" >
                 <div class="post-container">
                     {% for post in posts %}
-                        <li class="post_card" style="display: flex; align-items: center;">
+                        <li class="post_card" style="display: flex; align-items: center; border">
                                 <a href="{% url 'trade_post' item_id=post.item_id %}" style="color: black; text-decoration: none;">
                                 <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="pic" style="padding-top:0">
                                 {% comment %} <img src="{% static "img/end-post.png" %}" class=""> {% endcomment %}
@@ -97,7 +113,7 @@
                                         overlay.style.display = 'none';
                                     {% endif %}
                                 </script>
-                            <div class="card-info-box" style="text-align: center; margin:80px;">
+                            <div class="card-info-box" style="text-align: center; margin:20px;">
                                 <h5>{{ post.title }}</h5>
                                 <p class="bold">{{ post.price |intcomma}}원</p>
                                 {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
