@@ -72,15 +72,15 @@
                 <h5>{{ post.title }}</h5>
                 <p class="bold">{{ post.price |add_commas}}원</p>
                 <p>{{ post.hope_loc }}</p>
-                <div class="flex-box">
-                  <p>조회
-                    {{ post.views }}</p>
-                  <p>·</p>
-                  <p>채팅
-                    {{ post.chat_count }}</p>
+                <div class="flex-box" style="font-size : 13px;">
+                    <p>조회
+                      {{ post.views }}</p>
+                    <p>·</p>
+                    <p>채팅
+                      {{ post.chat_count }}</p>
                 </div>
                 <div>
-                  <p>{{ post.upload_date|format_upload_date }}</p>
+                  <p style="font-size : 13px;">{{ post.upload_date|format_upload_date }}</p>
                 </div>
               </div>
             </a>
