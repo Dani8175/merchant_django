@@ -1,10 +1,10 @@
 .footer{
     width: 100%;
     background-color: #fff;
-    height: 200px;
+    height: 225px;
     display: flex;
     font-family: 'Pretendard', sans-serif;
-    margin-top: 112px;
+    margin-top: 60px;
 }
 
 .buttons{
