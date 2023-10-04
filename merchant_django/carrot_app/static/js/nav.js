@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.pathname.includes("edit")
   ) {
     document.getElementById("trade-button").classList.toggle("orange-text");
+  } else if (window.location.pathname == "/village_store/") {
+    document.getElementById("village-store-button").classList.toggle("orange-text");
   } else if (window.location.pathname == "/location/") {
     document.getElementById("location-button").classList.toggle("orange-text");
   }

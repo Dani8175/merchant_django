@@ -15,6 +15,7 @@ from django.utils.timesince import timesince
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
+import requests
 
 # Create your views here.
 
@@ -244,3 +245,16 @@ def set_region_certification(request):
 def account(request):
     posts = Item.objects.filter(seller_name=request.user)
     return render(request, "account.html", {"posts": posts})
+
+
+def village_store(request):
+    return render(request, "village_store.html")
+
+
+def search_places(query):
+    api_url = "https://dapi.kakao.com/v2/local/search/keyword.json"
+    headers = {"Authorization": f"KakaoAK {settings.KAKAO_MAPS_API_KEY}"}
+    params = {"query": query}
+    response = requests.get(api_url, headers=headers, params=params)
+    data = response.json()
+    return data

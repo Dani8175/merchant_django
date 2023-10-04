@@ -28,4 +28,5 @@ urlpatterns = [
     ),
     path("account/", views.account, name="account"),
     path("post/<int:item_id>/", views.trade_post, name="trade_post"),
+    path("village_store/", views.village_store, name="village_store"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
