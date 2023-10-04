@@ -101,7 +101,7 @@
         <div class="chat-main-container">
           <div>
             <div class="contact-info flex-box">
-              <div class="user-id-placeholder"> <!-- 사용자 아이디를 표시할 곳 -->
+              <div class="user-id-placeholder">국왕 <!-- 사용자 아이디를 표시할 곳 -->
               </div>
               <div class="temp">
                 36.9도
@@ -114,8 +114,8 @@
                   <img src="" alt="">
                 </div>
                 <div class="goods-info-box">
-                  <p>국왕</p>
-                  <p class="bold">장고나라</p>
+                  <p>장고나라</p>
+                  <p class="bold">20조원</p>
                 </div>
               </div>
               <button>거래완료</button>
@@ -143,8 +143,8 @@
   const chatBox = document.querySelector(".chat-container");
 
   // 사용자 아이디와 WebSocket 경로 설정
-  const userId = "국왕"; // 사용자 아이디 설정
-  const wsPath = `ws://${window.location.host}/ws/chat/test/`;
+  const userId = "admin"; // 사용자 아이디를 공란으로 설정
+  const wsPath = `ws://${window.location.host}/ws/chat/`;
 
   // WebSocket 연결
   const chatSocket = new WebSocket(wsPath);
