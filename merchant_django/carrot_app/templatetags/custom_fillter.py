@@ -40,19 +40,19 @@ def format_upload_date(upload_date):
     time_since = now - upload_date
 
     if time_since.days >= 365:
-        return f"{time_since.days // 365}년 전"
+        return f"{time_since.days // 365}년전"
     elif time_since.days >= 30:
-        return f"{time_since.days // 30}달 전"
+        return f"{time_since.days // 30}달전"
     elif time_since.days >= 7:
-        return f"{time_since.days // 7}주 전"
+        return f"{time_since.days // 7}주전"
     elif time_since.days > 0:
         return f"{time_since.days}일 전"
     elif time_since.seconds >= 3600:
-        return f"{time_since.seconds // 3600}시간 전"
+        return f"{time_since.seconds // 3600}시간전"
     elif time_since.seconds >= 60:
-        return f"{time_since.seconds // 60}분 전"
+        return f"{time_since.seconds // 60}분전"
     else:
-        return "방금 전"
+        return "방금전"
 
 
 @register.filter

@@ -26,7 +26,6 @@ h3{
     width: 100%;
     height: 380px;
     object-fit: contain;
-    background-color: #dedede;
     border-radius: 12px;
 }
 
@@ -141,11 +140,17 @@ hr{
 }
 
 .chat-box img{
-    height: auto;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    background-color: #dedede;
+    border-radius: 12px;
 }
 
 .thumbnail-box{
+    position: relative;
     width: 48px;
+    height: -webkit-fill-available;
     height: 48px;
     background-color:#818181;
     border-radius: 8px;
@@ -183,7 +188,11 @@ hr{
 }
 
 .selected-thumbnail-box img{
-    height: 100%;
+    width: 48px;    
+    height: 48px;
+    object-fit: cover;
+    background-color: #dedede;
+    border-radius: 12px;
 }
 
 .goods-box button{
@@ -258,4 +267,34 @@ hr{
     padding: 6px 20px;
     border-radius: 4px;
     margin: 16px;
+}
+
+a {
+    text-decoration: none;
+    
+}
+.chatlink :hover{
+    opacity: 0.85;
+    cursor: pointer;
+    background-color: #cacacaf6;
+}
+
+.flex-box p{
+    color: #000;
+    text-decoration: none;
+}
+
+.flex-box a:link{
+    color:#000;
+    text-decoration: none;
+}
+
+
+.flex-box a:visited{
+    color:#000;
+    text-decoration: none;
+}
+.flex-box a:active {
+    color:#000;
+    text-decoration: none;
 }
