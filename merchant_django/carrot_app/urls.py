@@ -13,6 +13,7 @@ urlpatterns = [
     path(r"logout/", views.logout_request, name="logout"),
     path(r"register/", views.register_view, name="register"),
     path(r"chat/", views.chat, name="chat"),
+    path(r"chat/<str:room_num>/", views.chat, name="chat"),
     path(r"location/", views.location, name="location"),
     path(r"search/", views.search, name="search"),
     path(r"trade/", views.trade, name="trade"),
