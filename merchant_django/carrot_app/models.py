@@ -28,15 +28,14 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
-    )
-    region = models.CharField(max_length=100, null=True)
-    region_certification = models.CharField(max_length=1, default="N")
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(
+#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
+#     )
+#     region_certification = models.CharField(max_length=1, default="N")
 
-    def __str__(self):
-        return f"{self.user.username} Profile"
+#     def __str__(self):
+#         return f"{self.user.username} Profile"
 
 
 class CustomUser(AbstractUser):
@@ -118,7 +117,7 @@ class Category(models.Model):
 class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(null=True)
     sender = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name="sender_name")
     receiver = models.ForeignKey(
         CustomUser, on_delete=models.DO_NOTHING, related_name="receiver_name"

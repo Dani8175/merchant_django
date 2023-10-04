@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
@@ -32,8 +33,17 @@ def main(request):
     return render(request, "main.html", {"posts": posts})
 
 
-def chat(request):
-    return render(request, "chat.html")
+def chat(request, room_num=None):
+    chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id))
+    if room_num is not None:
+        room = get_object_or_404(Chat, chat_id=room_num)
+    else:
+        room = None
+
+    if not chats:
+        chats = None  # 채팅이 없는 경우에는 chats 변수를 None으로 설정하여 링크 생성을 방지
+
+    return render(request, "chat.html", {"chats": chats, "room": room})
 
 
 # def location(request):
@@ -100,8 +110,20 @@ def alert(request, alert_message):
     return render(request, "alert.html", {"alert_message": alert_message})
 
 
+def extract_post_number(url):
+    match = re.search(r"post/(\d+)/", url)
+    if match:
+        return match.group(1)
+    return None
+
+
 def trade_post(request, item_id):
     item = Item.objects.get(item_id=item_id)
+
+    try:
+        reverse_chat = Chat.objects.get(item_id=item_id)
+    except Chat.DoesNotExist:
+        reverse_chat = None
 
     last_view_time_str = request.session.get(f"last_view_time_{item_id}")
     current_time = datetime.datetime.now()
@@ -113,11 +135,22 @@ def trade_post(request, item_id):
         item.save()
         request.session[f"last_view_time_{item_id}"] = current_time.strftime("%Y-%m-%d %H:%M:%S.%f")
 
-    if request.method == "POST":
+    if request.method == "POST" and "delete" in request.POST:
         item.delete()
         return redirect("trade")
+    elif request.method == "POST" and "urlPart" in request.POST:
+        url_part = request.POST.get("urlPart")
+        post_number = extract_post_number(url_part)
 
-    return render(request, "trade_post.html", {"item": item})
+        chats = Chat.objects.filter(item_id=post_number, sender=request.user)
+        if not chats.exists():
+            Chat.objects.create(item_id=post_number, sender=request.user, receiver=item.seller_name)
+
+        # request.session["post_number"] = post_number
+
+        return redirect("chat")
+
+    return render(request, "trade_post.html", {"item": item, "reverse_chat": reverse_chat})
 
 
 def write(request):

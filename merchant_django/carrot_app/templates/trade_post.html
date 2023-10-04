@@ -51,7 +51,7 @@
                           <div class="modal-buttons">
                             <form method="POST" action="{% url 'trade_post' item_id=item.item_id %}">
                                 {% csrf_token %}
-                                <input type="hidden" name="delete-button" id="delete-button" value="true">
+                                <input type="hidden" name="delete" id="delete-button" value="true">
                                 <button id="delete-button" class="btn">삭제</button>
                             </form>
                             <button id="deleteCancelBtn" class="btn">취소</button>
@@ -73,16 +73,33 @@
                   <a href="{% url 'edit' item_id=item.item_id %}">
                     <button class="grey">수정하기</button>
                   </a>
-                  <a href="{% url 'chat' %}"> 
-                  <button class="orange">채팅보기</button>
-                  </a>
+                  {% if reverse_chat %}
+                   <a href="{% url 'chat' room_num=reverse_chat.chat_id %}"><button class="orange">채팅보기</button></a>
+                  {% endif %}                  
                 </div>
               {% else %}
-                <div class="button-box">
-                  <a href="{% url 'chat' %}">
-                    <button class="orange">채팅하기</button>
-                  </a>
-                </div>
+                {% if item.is_end == True %}
+                  <p>거래완료된 상품입니다</p>
+                {% else %}
+                <form method="POST"  id="myForm" >
+                  {% csrf_token %}
+                  <input type="hidden" name="urlPart" id="urlPartInput">
+                  {% if reverse_chat %}
+                    <a href="{% url 'chat' room_num=reverse_chat.chat_id %}">
+                  {% else %}
+                    <a href="{% url 'chat' %}">
+                  {% endif %}  
+                  <div class="button-box">
+                    <button type='submit' class="orange" >채팅하기</button>
+                  </div>
+                </a>
+                </form>
+                <script>
+                  var url = window.location.href;
+                  document.getElementById('urlPartInput').value = url;
+
+                </script>
+                {% endif %}
               {% endif %}
             </div>
             <hr class="line">

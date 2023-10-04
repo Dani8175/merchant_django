@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load custom_fillter %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +25,7 @@
           <div class="flex-box">
             <!-- 아이디및 체크박스 -->
             <div class="id-box flex-box between">
-              아이디
+              {{ user.username }}
               <div>
                 <label>
                   안읽은 메세지만 보기
@@ -35,102 +35,109 @@
             </div>
           </div>
           <!-- 채팅 리스트 -->
-          <div class="chat-list-box flex-box column">
-            <!-- 국왕 클릭 시 채팅창 열기 -->
+          <div class="chat-list-box column" style="display:flex;">
+            <!-- 클릭 시 채팅창 열기 -->
+            {% for chat in chats %}
+            <a href="{% url 'chat' room_num=chat.chat_id %}" class="chatlink">
             <div class="flex-box chat-box between user-chat-button" data-user-id="1">
               <div>
+                {% if chat.sender_id == request.user.id %}
                 <div class="flex-box">
-                  <p class="bold">국왕</p>
-                  <p class="s-text">장고나라</p>
-                  <p class="s-text">3주전</p>
+                  <p class="bold">{{chat.receiver.username}}</p>
+                  <p class="s-text">{{chat.receiver.region}}</p>
+                  <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
                 </div>
-                <p class="chat-thumb-text">거래 잘 하셨나요? 거래한 이웃..</p>
+                {% else %}
+                <div class="flex-box">
+                  <p class="bold">{{chat.sender.username}}</p>
+                  <p class="s-text">{{chat.sender.region}}</p>
+                  <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                </div>
+                {% endif %}
+                <p class="chat-thumb-text">마지막 채팅 필요</p>
               </div>
-              <div class="thumbnail-box">
-                <img src="" alt="">
+              <div class="thumbnail-box"> 
+                <img src="{{ MEDIA_URL }}{{ chat.item.image_url }}" alt="{{ chat.item.title }}">
               </div>
             </div>
+            </a>
+            {% endfor %}  
 
-            <!-- 왕비 클릭 시 채팅창 열기 -->
-            <div class="flex-box chat-box between user-chat-button" data-user-id="2">
-              <div>
-                <div class="flex-box">
-                  <p class="bold">왕비</p>
-                  <p class="s-text">장고나라</p>
-                  <p class="s-text">1일 전</p>
-                </div>
-                <p class="chat-thumb-text">상품에 대한 문의가 있어요.</p>
-              </div>
-              <div class="thumbnail-box">
-                <img src="" alt="">
-              </div>
-            </div>
-
-            <!-- 첫째공주 클릭 시 채팅창 열기 -->
-            <div class="flex-box chat-box between user-chat-button" data-user-id="3">
-              <div>
-                <div class="flex-box">
-                  <p class="bold">첫째공주</p>
-                  <p class="s-text">장고나라</p>
-                  <p class="s-text">2일 전</p>
-                </div>
-                <p class="chat-thumb-text">상품 가격을 조정하려고 합니다.</p>
-              </div>
-              <div class="thumbnail-box">
-                <img src="" alt="">
-              </div>
-            </div>
-
-            <!-- 박봉 클릭 시 채팅창 열기 -->
-            <div class="flex-box chat-box between user-chat-button" data-user-id="4">
-              <div>
-                <div class="flex-box">
-                  <p class="bold">박봉</p>
-                  <p class="s-text">거상</p>
-                  <p class="s-text">3일 전</p>
-                </div>
-                <p class="chat-thumb-text">배송일정을 확인해주세요.</p>
-              </div>
-              <div class="thumbnail-box">
-                <img src="" alt="">
-              </div>
-            </div>
           </div>
         </div>
-        <!-- 채팅창-->
-        <div class="chat-main-container">
-          <div>
-            <div class="contact-info flex-box">
-              <div class="user-id-placeholder">국왕 <!-- 사용자 아이디를 표시할 곳 -->
-              </div>
-              <div class="temp">
-                36.9도
-              </div>
+
+
+          {% if room is None %}
+          <div class="chat-main-container" style= "display: flex; justify-content: center;">
+            <div style="justify-content: center; display: flex;">
+              <p>채팅을 선택해주세요</p>
             </div>
-            <!--물품정보-->
-            <div class="goods-box flex-box between">
-              <div class="flex-box">
-                <div class="selected-thumbnail-box">
-                  <img src="" alt="">
+          {% else %}
+          <div class="chat-main-container">
+            <div>
+              <div class="contact-info flex-box">
+                <div class="user-id-placeholder">
+                  {% if room.sender_id == request.user.id %}
+                    {{room.receiver.username}} <!-- 사용자 아이디를 표시할 곳 -->
+                  {% else %}
+                    {{room.sender.username}} <!-- 사용자 아이디를 표시할 곳 -->
+                  {% endif %}
                 </div>
-                <div class="goods-info-box">
-                  <p>장고나라</p>
-                  <p class="bold">20조원</p>
+                <div class="temp">
+                  36.9도
                 </div>
               </div>
-              <button>거래완료</button>
+              <!--물품정보-->
+              <div class="goods-box flex-box between">
+                {% if room is not None %}
+                <a href={% url 'trade_post' item_id=room.item_id %}>
+                <div class="flex-box">
+                  <div class="selected-thumbnail-box">
+                    <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
+                  </div>
+                  <div class="goods-info-box">
+                    <p>{{room.item.title}}</p>
+                    {% if room.sender_id == request.user.id %}
+                    {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                    {% else %}
+                      {{room.sender.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                    {% endif %}
+                  </div>
+                </div>
+                </a>
+                {% else %}
+                {% comment %} <a href={% url 'trade_post' item_id=room.item %}> {% endcomment %}
+                <div class="flex-box">
+                  <div class="selected-thumbnail-box">
+                    <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
+                  </div>
+                  <div class="goods-info-box">
+                    <p>{{room.item.title}}</p>
+                    {% if room.sender_id == request.user.id %}
+                    {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                    {% else %}
+                      {{room.sender.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                    {% endif %}
+                  </div>
+                </div>
+                {% comment %} </a> {% endcomment %}
+                {% endif %}
+                <button>거래완료</button>
+              {% endif %}
             </div>
             <!--채팅창 메인-->
             <div class="chat-container">
               <!-- 메시지가 표시될 곳 -->
             </div>
           </div>
+          {% if room is not None %}
           <form class="chat-input" action="submit">
             <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
             <div>
               <button>전송</button>
             </div>
           </form>
+          {% endif %}
         </div>
       </div>
     </div>
