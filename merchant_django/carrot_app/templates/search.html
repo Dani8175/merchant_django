@@ -37,7 +37,17 @@
                   <div class="card-img">
                     {% if searched_item.image_url %}
                       <img src="{{ MEDIA_URL }}{{ searched_item.image_url }}" alt="{{ searched_item.title }}">
+                      <img src="{% static "img/end.png" %}" class="overlay-image" id="overlay-image-{{ searched_item.item_id }}">
                     {% endif %}
+                  {% if searched_item.is_end %}
+                    <script>
+                     document.querySelector('#overlay-image-{{ searched_item.item_id }}').style.display = 'block';
+                    </script>
+                  {% else %}
+                    <script>
+                      document.querySelector('#overlay-image-{{ searched_item.item_id }}').style.display = 'none';
+                    </script>
+                  {% endif %}
                   </div>
                   <div class="card-info-box">
                     <h5>{{ searched_item.title }}</h5>

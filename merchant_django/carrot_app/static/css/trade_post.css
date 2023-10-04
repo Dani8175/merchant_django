@@ -22,13 +22,33 @@ h3 {
 
 }
 
-.post-box img {
+.container {
+    position: relative;
+  }
+  
+  .base-image {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 380px;
     object-fit: contain;
     background-color: #dedede;
     border-radius: 12px;
-}
+  }
+  
+  .overlay-image {
+    position: absolute;
+    top: 105px;
+    left: 58px;
+    z-index: 2;
+    opacity: 0.8;
+    display: none; /* 초기에는 겹치는 이미지를 숨김 */
+    width: 1084px;
+    height: 380px;
+    background-color: #dedede;
+    border-radius: 12px;
+    
+  }
 
 .info-button-box {
     margin: 28px 0;

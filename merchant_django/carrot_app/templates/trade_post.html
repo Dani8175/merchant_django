@@ -22,11 +22,21 @@
       <div class="container column">
         <div class="post-box">
           {% block content %}
-            <img src="{{ MEDIA_URL }}{{ item.image_url }}" alt="{{ item.title }}" class="block-box" style="padding-top:0">
+            <img src="{{ MEDIA_URL }}{{ item.image_url }}" alt="{{ item.title }}" class="block-box base-image" style="padding-top:0">
+            <img src="{% static "img/end-post.png" %}" class="overlay-image">
+          {% if item.is_end %}
+          <script>
+            document.querySelector('.overlay-image').style.display = 'block';
+          </script>
+          {% else %}
+          <script>
+            document.querySelector('.overlay-image').style.display = 'none';
+          </script>
+          {% endif %}  
             <div class="flex-box between info-button-box">
               <div class="user-info">
                 <h6>{{ item.seller_name }}</h6>
-                <p>{{ user.region }}</p>
+                <p>{{ item.seller_name.region }}</p>
               </div>
               {% if request.user == item.seller_name %}
                 <div class="flex-box button-box">

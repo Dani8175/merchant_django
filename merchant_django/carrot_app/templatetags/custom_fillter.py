@@ -67,6 +67,6 @@ def add_commas(number):
 
 
 @register.filter(name="mask_and_truncate_password")
-def mask_and_truncate_password(password, length=4):
+def mask_and_truncate_password(password, length=8):
     masked_password = "*" * len(password)
     return masked_password[:length]

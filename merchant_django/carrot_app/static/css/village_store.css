@@ -1,0 +1,118 @@
+* {
+    font-family: 'Pretendard', sans-serif;
+}
+
+.title_background {
+    background-color: #f7f1eb;
+    position: fixed;
+    width: 1700px;
+    height: 425px;
+    top: 0;
+}
+
+.title_img {
+    margin-left: 600px;
+    margin-top: -197px;
+    margin-left: 110px;
+}
+
+.nearby_stores {
+    width: 550px;
+    margin-top: -228px;
+    margin-left: 760px;
+}
+
+.title_h1 {
+    margin-top: 140px;
+    margin-left: 203px;
+    font-weight: 700px;
+    line-height: 64px;
+    font-size: 51px;
+}
+
+.main_h2 {
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 64px;
+}
+
+.main {
+    margin-top: 500px;
+    display: flex;
+    justify-content: center;
+}
+
+.menu1 {
+    display: flex;
+}
+
+.menu_div {
+    display: flex;
+    justify-content: center;
+    width: 900px;
+    margin-top: 35px;
+}
+
+.menu_label {
+    border: 0.0625rem solid #eaebee;
+    box-sizing: border-box;
+    border-radius: 6.25rem;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    height: 40px;
+    margin: 0 7px;
+    width: 70px;
+}
+
+.menu_label1 {
+    border: 0.0625rem solid #eaebee;
+    box-sizing: border-box;
+    border-radius: 6.25rem;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    height: 40px;
+    margin: 0 10px;
+}
+
+.menu_label:hover {
+    background-color: #fff5f0;
+}
+
+.menu_label:active {
+    background-color: #303030;
+    color: #f7f1eb;
+}
+
+.menu_label1:hover {
+    background-color: #fff5f0;
+}
+
+.menu_input {
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+#map {
+    display: none;
+}
