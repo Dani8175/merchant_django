@@ -90,6 +90,7 @@ hr{
 .chat-select-container{
     width: 30%;
     background-color: #fff;
+    overflow: auto;
     border-right: 1px solid #e2e2e2;
 }
 
@@ -276,8 +277,12 @@ a {
 .chatlink :hover{
     opacity: 0.85;
     cursor: pointer;
-    background-color: #cacacaf6;
+    background-color: #e4e4e4e8;
 }
+.no-hover:hover {
+    /* 마우스 호버 시 적용되지 않을 스타일을 정의하세요 */
+    pointer-events: none;
+}   
 
 .flex-box p{
     color: #000;
@@ -297,4 +302,10 @@ a {
 .flex-box a:active {
     color:#000;
     text-decoration: none;
+}
+
+.active {
+    background-color: #a1a1a1bb;
+    opacity: 0.85;
+    /* 원하는 하이라이트 스타일을 추가하세요 */
 }

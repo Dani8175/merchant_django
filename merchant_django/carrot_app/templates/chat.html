@@ -62,7 +62,22 @@
             </div>
             </a>
             {% endfor %}  
-
+            <script>
+              // 현재 페이지의 URL을 가져옵니다
+              var currentUrl = window.location.href;
+          
+              // 모든 링크를 가져와 반복합니다
+              var links = document.getElementsByTagName("a");
+              for (var i = 0; i < links.length; i++) {
+                  var link = links[i];
+                  
+                  // 현재 페이지의 URL과 링크의 href 속성을 비교합니다
+                  if (link.href === currentUrl) {
+                      // 현재 페이지와 일치하는 링크에 active 클래스를 추가합니다
+                      link.classList.add("active");
+                  }
+              }
+          </script> 
           </div>
         </div>
 

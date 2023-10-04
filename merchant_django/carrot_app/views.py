@@ -121,7 +121,7 @@ def trade_post(request, item_id):
     item = Item.objects.get(item_id=item_id)
 
     try:
-        reverse_chat = Chat.objects.get(item_id=item_id)
+        reverse_chat = Chat.objects.get(Q(item_id=item_id) & Q(sender=request.user))
     except Chat.DoesNotExist:
         reverse_chat = None
 
