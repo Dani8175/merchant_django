@@ -62,7 +62,13 @@
     border-radius: 8px;
 }
 
+.flex-box .gap16 a{
+    text-decoration: none;
+}
 
+.flex-box .gap16 h6{
+    font-size: 14px;
+}
 
 /* 중고거래 인기매물 */
 
