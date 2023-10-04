@@ -66,6 +66,10 @@
     text-decoration: none;
 }
 
+.flex-box .gap16 h6{
+    font-size: 14px;
+}
+
 /* 중고거래 인기매물 */
 
 .trade-info-section{
