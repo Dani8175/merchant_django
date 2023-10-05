@@ -28,7 +28,6 @@ openai.api_key = json_object["OPENAI_KEY"]
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = json_object["DJANGO_SECRET_KEY"]
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -46,15 +45,21 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "carrot_app",
     "channels",
+    "channels_redis",
+    "daphne",
 ]
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
 }
 
-ASGI_APPLICATION = "merchant_django.routing.application"
+WSGI_APPLICATION = "merchant_django.wsgi.application"
+ASGI_APPLICATION = "merchant_django.asgi.application"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

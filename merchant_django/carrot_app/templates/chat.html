@@ -40,63 +40,63 @@
             <!-- 클릭 시 채팅창 열기 -->
             {% for chat in chats %}
             <a href="{% url 'chat' room_num=chat.chat_id %}" class="chatlink">
-            <div class="flex-box chat-box between user-chat-button" data-user-id="1">
-              <div>
-                {% if chat.sender_id == request.user.id %}
-                <div class="flex-box">
-                  <p class="bold">{{chat.receiver.username}}</p>
-                  <p class="s-text">{{chat.receiver.region}}</p>
-                  <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+              <div class="flex-box chat-box between user-chat-button" data-user-id="1">
+                <div>
+                  {% if chat.sender_id == request.user.id %}
+                  <div class="flex-box">
+                    <p class="bold">{{chat.receiver.username}}</p>
+                    <p class="s-text">{{chat.receiver.region}}</p>
+                    <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                  </div>
+                  {% else %}
+                  <div class="flex-box">
+                    <p class="bold">{{chat.sender.username}}</p>
+                    <p class="s-text">{{chat.sender.region}}</p>
+                    <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                  </div>
+                  {% endif %}
+                  <p class="chat-thumb-text">마지막 채팅 필요</p>
                 </div>
-                {% else %}
-                <div class="flex-box">
-                  <p class="bold">{{chat.sender.username}}</p>
-                  <p class="s-text">{{chat.sender.region}}</p>
-                  <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                <div class="thumbnail-box">
+                  <img src="{{ MEDIA_URL }}{{ chat.item.image_url }}" alt="{{ chat.item.title }}">
                 </div>
-                {% endif %}
-                <p class="chat-thumb-text">마지막 채팅 필요</p>
               </div>
-              <div class="thumbnail-box"> 
-                <img src="{{ MEDIA_URL }}{{ chat.item.image_url }}" alt="{{ chat.item.title }}">
-              </div>
-            </div>
             </a>
-            {% endfor %}  
+            {% endfor %}
             <script>
               // 현재 페이지의 URL을 가져옵니다
               var currentUrl = window.location.href;
-          
+
               // 모든 링크를 가져와 반복합니다
               var links = document.getElementsByTagName("a");
               for (var i = 0; i < links.length; i++) {
-                  var link = links[i];
-                  
-                  // 현재 페이지의 URL과 링크의 href 속성을 비교합니다
-                  if (link.href === currentUrl) {
-                      // 현재 페이지와 일치하는 링크에 active 클래스를 추가합니다
-                      link.classList.add("active");
-                  }
+                var link = links[i];
+
+                // 현재 페이지의 URL과 링크의 href 속성을 비교합니다
+                if (link.href === currentUrl) {
+                  // 현재 페이지와 일치하는 링크에 active 클래스를 추가합니다
+                  link.classList.add("active");
+                }
               }
-          </script> 
+            </script>
           </div>
         </div>
 
 
-          {% if room is None %}
-          <div class="chat-main-container" style= "display: flex; justify-content: center;">
-            <div style="justify-content: center; display: flex;">
-              <p>채팅을 선택해주세요</p>
-            </div>
+        {% if room is None %}
+        <div class="chat-main-container" style="display: flex; justify-content: center;">
+          <div style="justify-content: center; display: flex;">
+            <p>채팅을 선택해주세요</p>
+          </div>
           {% else %}
           <div class="chat-main-container">
             <div>
               <div class="contact-info flex-box">
                 <div class="user-id-placeholder">
                   {% if room.sender_id == request.user.id %}
-                    {{room.receiver.username}} <!-- 사용자 아이디를 표시할 곳 -->
+                  {{room.receiver.username}} <!-- 사용자 아이디를 표시할 곳 -->
                   {% else %}
-                    {{room.sender.username}} <!-- 사용자 아이디를 표시할 곳 -->
+                  {{room.sender.username}} <!-- 사용자 아이디를 표시할 곳 -->
                   {% endif %}
                 </div>
                 <div class="temp">
@@ -106,37 +106,38 @@
               <!--물품정보-->
               <div class="goods-box flex-box between">
                 {% if room is not None %}
-                <a href={% url 'trade_post' item_id=room.item_id %}>
-                <div class="flex-box">
-                  <div class="selected-thumbnail-box">
-                    <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
-                  </div>
-                  <div class="goods-info-box">
-                    <p>{{room.item.title}}</p>
-                    {% if room.sender_id == request.user.id %}
-                    {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
-                    {% else %}
+                <a href="{% url 'trade_post' item_id=room.item_id %}">
+                  <div class="flex-box">
+                    <div class="selected-thumbnail-box">
+                      <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
+                    </div>
+                    <div class="goods-info-box">
+                      <p>{{room.item.title}}</p>
+                      {% if room.sender_id == request.user.id %}
+                      {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                      {% else %}
                       {{room.sender.region}} <!-- 사용자 아이디를 표시할 곳 -->
-                    {% endif %}
+                      {% endif %}
+                    </div>
                   </div>
-                </div>
                 </a>
                 {% else %}
-                {% comment %} <a href={% url 'trade_post' item_id=room.item %}> {% endcomment %}
-                <div class="flex-box">
-                  <div class="selected-thumbnail-box">
-                    <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
-                  </div>
-                  <div class="goods-info-box">
-                    <p>{{room.item.title}}</p>
-                    {% if room.sender_id == request.user.id %}
-                    {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
-                    {% else %}
+                {% comment %} <a href="{% url 'trade_post' item_id=room.item %}"> {% endcomment %}
+                  <div class="flex-box">
+                    <div class="selected-thumbnail-box">
+                      <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
+                    </div>
+                    <div class="goods-info-box">
+                      <p>{{room.item.title}}</p>
+                      {% if room.sender_id == request.user.id %}
+                      {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
+                      {% else %}
                       {{room.sender.region}} <!-- 사용자 아이디를 표시할 곳 -->
-                    {% endif %}
+                      {% endif %}
+                    </div>
                   </div>
-                </div>
-                {% comment %} </a> {% endcomment %}
+                  {% comment %}
+                </a> {% endcomment %}
                 {% endif %}
                 {% if room.item.is_end == False %}
                   {% if room.receiver_id == request.user.id %}
@@ -155,6 +156,14 @@
             <div class="chat-container">
               <!-- 메시지가 표시될 곳 -->
             </div>
+            {% if room is not None %}
+            <form class="chat-input" action="submit">
+              <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
+              <div>
+                <button>전송</button>
+              </div>
+            </form>
+            {% endif %}
           </div>
           {% if room is not None %}
             {% if room.item.is_end == True %}
@@ -176,65 +185,7 @@
         </div>
       </div>
     </div>
-  </div>
-  {% include 'footer.html' %}
+    {% include 'footer.html' %}
 </body>
-<script>
-  const chatForm = document.querySelector(".chat-input");
-  const messageInput = chatForm.querySelector("textarea");
-  const chatBox = document.querySelector(".chat-container");
-
-  // 사용자 아이디와 WebSocket 경로 설정
-  const userId = "admin"; // 사용자 아이디를 공란으로 설정
-  const wsPath = `ws://${window.location.host}/ws/chat/`;
-
-  // WebSocket 연결
-  const chatSocket = new WebSocket(wsPath);
-
-  chatSocket.onmessage = function (e) {
-    const data = JSON.parse(e.data);
-    const message = data.message;
-
-    // 받은 메시지를 채팅창에 표시
-    const messageBox = document.createElement("div");
-    messageBox.classList.add("message-box");
-    messageBox.classList.add("from-other");
-    messageBox.innerHTML = `
-      <div class="message-text">${message}</div>
-      <p class="s-text">${getCurrentTime()}</p>
-    `;
-    chatBox.appendChild(messageBox);
-  };
-
-  chatSocket.onclose = function (e) {
-    console.error("WebSocket closed unexpectedly");
-  };
-
-  chatForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const message = messageInput.value.trim();
-    if (message) {
-      chatSocket.send(JSON.stringify({ message: message }));
-      messageInput.value = "";
-
-      // 보낸 메시지를 채팅창에 표시
-      const messageBox = document.createElement("div");
-      messageBox.classList.add("message-box");
-      messageBox.classList.add("from-me");
-      messageBox.innerHTML = `
-        <p class="s-text">${getCurrentTime()}</p>
-        <div class="message-text">${message}</div>
-      `;
-      chatBox.appendChild(messageBox);
-    }
-  });
-
-  function getCurrentTime() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  }
-</script>
 
 </html>

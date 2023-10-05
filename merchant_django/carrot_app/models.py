@@ -135,3 +135,47 @@ class Chat(models.Model):
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%-m-%-d %H:%M")})'
         else:
             return f'{self.sender.username} -> {self.receiver.username}: {self.content} ({self.timestamp.strftime("%Y-%-m-%-d %H:%M")})'
+
+
+class ChatRoom(models.Model):
+    room_number = models.AutoField(primary_key=True)
+    starter = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="started_chats"
+    )
+    receiver = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="received_chats"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    latest_message_time = models.DateTimeField(null=True, blank=True)
+    post = models.ForeignKey(
+        Item, on_delete=models.CASCADE, related_name="chat_rooms", null=True, blank=True
+    )
+    seller_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"ChatRoom: {self.starter.username} and {self.receiver.username}"
+
+
+class Message(models.Model):
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="messages")
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="authored_messages"
+    )
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message: {self.author.username} at {self.timestamp}"
+
+    def save(self, *args, **kwargs):
+        self.content = f"{self.author.username}:{self.content}"
+        super().save(*args, **kwargs)
+
+    def get_speaker_and_content(self):
+        parts = self.content.split(":")
+        if len(parts) == 2:
+            speaker = parts[0]
+            content = parts[1]
+            return speaker, content
+        else:
+            return None, None
