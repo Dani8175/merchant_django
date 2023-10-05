@@ -156,14 +156,6 @@
             <div class="chat-container">
               <!-- 메시지가 표시될 곳 -->
             </div>
-            {% if room is not None %}
-            <form class="chat-input" action="submit">
-              <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
-              <div>
-                <button>전송</button>
-              </div>
-            </form>
-            {% endif %}
           </div>
           {% if room is not None %}
             {% if room.item.is_end == True %}
