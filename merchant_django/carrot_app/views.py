@@ -75,7 +75,9 @@ def search(request):
 
     if search_query:
         searched_items = searched_items.filter(
-            Q(title__icontains=search_query) | Q(hope_loc__icontains=search_query)
+            Q(title__icontains=search_query)
+            | Q(hope_loc__icontains=search_query)
+            | Q(seller_name__region__icontains=search_query)
         )
         redirect_url = request.path + "?search=" + search_query
     else:
