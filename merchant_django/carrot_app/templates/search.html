@@ -11,8 +11,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색결과</title>
+    <style>
+      .footer{
+        position: relative;
+        transform: translateY(100%);
+      }
+    </style>
   </head>
 
   <body>
@@ -53,7 +60,7 @@
                     <h5>{{ searched_item.title }}</h5>
                     <p class="bold">{{ searched_item.price |add_commas}}원</p>
                     {% comment %} <p class="bold">{{ searched_item.price }}</p> {% endcomment %}
-                    <p>{{ searched_item.hope_loc }}</p>
+                    <p>{{ searched_item.seller_name.region }}</p>
                     <div class="flex-box">
                       <p>조회
                         {{ searched_item.views }}</p>

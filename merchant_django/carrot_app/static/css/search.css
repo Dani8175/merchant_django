@@ -1,5 +1,5 @@
 *{
-    font-family: 'Pretendard', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 body{
@@ -243,6 +243,7 @@ a {
   align-items: center;
   justify-content: center;
   color: #fff;
+  z-index: 999;
 }
   
 .floating-button a{

@@ -15,7 +15,7 @@ import openai
 import json
 from django.views import View
 from django.utils.decorators import method_decorator
-
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
@@ -36,15 +36,29 @@ def main(request):
     return render(request, "main.html", {"posts": posts})
 
 
+@login_required
 def chat(request, room_num=None):
-    chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id))
-    if room_num is not None:
-        room = get_object_or_404(Chat, chat_id=room_num)
-    else:
-        room = None
+    chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id)).order_by(
+        "-timestamp"
+    )
 
-    if not chats:
-        chats = None  # 채팅이 없는 경우에는 chats 변수를 None으로 설정하여 링크 생성을 방지
+    user_profile = CustomUser.objects.get(username=request.user)
+
+    if user_profile.region is None:
+        return redirect("alert", alert_message="동네인증이 필요합니다.")
+    else:
+        if room_num is not None:
+            room = get_object_or_404(Chat, chat_id=room_num)
+            if request.method == "POST":
+                room.item.is_end = True
+                room.item.save()
+                room.save()
+                return redirect("chat", room.chat_id)
+        else:
+            room = None
+
+        if not chats:
+            chats = None  # 채팅이 없는 경우에는 chats 변수를 None으로 설정하여 링크 생성을 방지
 
     return render(request, "chat.html", {"chats": chats, "room": room})
 
@@ -71,7 +85,9 @@ def search(request):
 
     if search_query:
         searched_items = searched_items.filter(
-            Q(title__icontains=search_query) | Q(hope_loc__icontains=search_query)
+            Q(title__icontains=search_query)
+            | Q(hope_loc__icontains=search_query)
+            | Q(seller_name__region__icontains=search_query)
         )
         redirect_url = request.path + "?search=" + search_query
     else:
@@ -88,9 +104,20 @@ def search(request):
     )
 
 
+def update_chat_count(request):
+    # chat 테이블에서 item_id가 동일한 항목들을 찾아서 count
+    chat_count_by_item = Chat.objects.values("item_id").annotate(chat_count=Count("item_id"))
+
+    # item 테이블의 chat_count 컬럼에 값 업데이트
+    for chat in chat_count_by_item:
+        item_id = chat["item_id"]
+        chat_count = chat["chat_count"]
+        Item.objects.filter(item_id=item_id).update(chat_count=chat_count)
+
+
 def trade(request):
     sort = request.GET.get("sort")  # sort 값 가져오기
-
+    update_chat_count(request)
     # sort 값에 따른 처리 로직 작성
     if sort == "latest":
         # 최신순으로 정렬하는 로직 작성
@@ -123,10 +150,11 @@ def extract_post_number(url):
 def trade_post(request, item_id):
     item = Item.objects.get(item_id=item_id)
 
-    try:
-        reverse_chat = Chat.objects.get(Q(item_id=item_id) & Q(sender=request.user))
-    except Chat.DoesNotExist:
-        reverse_chat = None
+    if request.user.is_authenticated:
+        try:
+            reverse_chat = Chat.objects.get(Q(item_id=item_id) & Q(sender=request.user))
+        except Chat.DoesNotExist:
+            reverse_chat = None
 
     last_view_time_str = request.session.get(f"last_view_time_{item_id}")
     current_time = datetime.datetime.now()
@@ -142,18 +170,26 @@ def trade_post(request, item_id):
         item.delete()
         return redirect("trade")
     elif request.method == "POST" and "urlPart" in request.POST:
-        url_part = request.POST.get("urlPart")
-        post_number = extract_post_number(url_part)
+        if request.user.is_authenticated:
+            url_part = request.POST.get("urlPart")
+            post_number = extract_post_number(url_part)
 
-        chats = Chat.objects.filter(item_id=post_number, sender=request.user)
-        if not chats.exists():
-            Chat.objects.create(item_id=post_number, sender=request.user, receiver=item.seller_name)
+            chats = Chat.objects.filter(item_id=post_number, sender=request.user)
+            if not chats.exists():
+                Chat.objects.create(
+                    item_id=post_number, sender=request.user, receiver=item.seller_name
+                )
 
-        # request.session["post_number"] = post_number
+            # request.session["post_number"] = post_number
 
-        return redirect("chat")
+            return redirect("chat")
+        else:
+            return redirect("alert", alert_message="로그인이 필요합니다.")
 
-    return render(request, "trade_post.html", {"item": item, "reverse_chat": reverse_chat})
+    if request.user.is_authenticated:
+        return render(request, "trade_post.html", {"item": item, "reverse_chat": reverse_chat})
+    else:
+        return render(request, "trade_post.html", {"item": item})
 
 
 def write(request):
