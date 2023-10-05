@@ -102,7 +102,7 @@
             <ul class="post-list" >
                 <div class="post-container">
                     {% for post in posts %}
-                        <li class="post_card" style="display: flex; align-items: center; margin-right: 20px;">
+                        <li class="post_card" style="display: flex; align-items: center; margin-right: 20px; position: relative;">
                                 <a href="{% url 'trade_post' item_id=post.item_id %}" style="color: black; text-decoration: none;">
                                 <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="pic" style="padding-top:0">
                                 <img src="{% static "img/end.png" %}" class="overlay-image" id="overlay-image-{{ post.item_id }}">

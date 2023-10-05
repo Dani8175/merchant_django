@@ -96,7 +96,7 @@ button {
     object-fit: cover;
     height: 200px;
     border-radius: 12px;
-    top: 371px;
+    top: 0px;
     z-index: 2;
     opacity: 0.8;
     display: none; /* 초기에는 겹치는 이미지를 숨김 */
