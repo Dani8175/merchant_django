@@ -102,18 +102,19 @@
             <ul class="post-list" >
                 <div class="post-container">
                     {% for post in posts %}
-                        <li class="post_card" style="display: flex; align-items: center; margin-right: 20px;">
+                        <li class="post_card" style="display: flex; align-items: center; margin-right: 20px; position: relative;">
                                 <a href="{% url 'trade_post' item_id=post.item_id %}" style="color: black; text-decoration: none;">
                                 <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="pic" style="padding-top:0">
-                                {% comment %} <img src="{% static "img/end-post.png" %}" class=""> {% endcomment %}
+                                <img src="{% static "img/end.png" %}" class="overlay-image" id="overlay-image-{{ post.item_id }}">
+                                {% if post.is_end %}
                                 <script>
-                                    var overlay = document.querySelector('#overlay-{{ post.id }}');
-                                    {% if post.is_end %}
-                                        overlay.style.display = 'block';
-                                    {% else %}
-                                        overlay.style.display = 'none';
-                                    {% endif %}
+                                  document.querySelector('#overlay-image-{{ post.item_id }}').style.display = 'block';
                                 </script>
+                                {% else %}
+                                <script>
+                                  document.querySelector('#overlay-image-{{ post.item_id }}').style.display = 'none';
+                                </script>
+                                {% endif %}
                             <div class="card-info-box" style="text-align: center; margin:20px;">
                                 <h5>{{ post.title }}</h5>
                                 <p class="bold">{{ post.price |intcomma}}원</p>

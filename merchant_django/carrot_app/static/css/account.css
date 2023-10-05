@@ -81,3 +81,23 @@ button {
     display: flex;
     justify-content: center;
 }
+
+.pic {
+    position: relative;
+    z-index: 1;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+}
+
+.overlay-image {
+    position: absolute;
+    object-fit: cover;
+    height: 200px;
+    border-radius: 12px;
+    top: 0px;
+    z-index: 2;
+    opacity: 0.8;
+    display: none; /* 초기에는 겹치는 이미지를 숨김 */
+  }
