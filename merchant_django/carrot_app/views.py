@@ -7,7 +7,7 @@ from .forms import PostForm, RegisterForm, LoginForm
 from django.utils.html import strip_tags
 from django.http import HttpResponse
 from .models import *
-from django.db.models import Q
+from django.db.models import Q, F
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.utils.timesince import timesince
@@ -22,6 +22,7 @@ from django.contrib import messages
 from .models import ChatRoom, Message
 from django.contrib.auth.models import User
 import requests
+from django.db.models import Max
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -36,11 +37,20 @@ def main(request):
     return render(request, "main.html", {"posts": posts})
 
 
+def get_last_message(chat):
+    last_message = chat.messages.order_by("-timestamp").first()
+    return last_message
+
+
 @login_required
 def chat(request, room_num=None):
     chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id)).order_by(
-        "-timestamp"
+        F("last_message__timestamp").desc(nulls_last=True)
     )
+    for chat in chats:
+        last_message = get_last_message(chat)
+        chat.last_message = last_message
+        chat.save()
 
     user_profile = CustomUser.objects.get(username=request.user)
 
@@ -49,11 +59,12 @@ def chat(request, room_num=None):
     else:
         if room_num is not None:
             room = get_object_or_404(Chat, chat_id=room_num)
+
             if request.method == "POST":
                 room.item.is_end = True
                 room.item.save()
                 room.save()
-                return redirect("chat", room.chat_id)
+                redirect("chat", room_num=room.chat_id)
         else:
             room = None
 

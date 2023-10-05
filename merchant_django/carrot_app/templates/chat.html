@@ -27,12 +27,12 @@
             <!-- 아이디및 체크박스 -->
             <div class="id-box flex-box between">
               {{ user.username }}
-              <div>
+              {% comment %} <div>
                 <label>
                   안읽은 메세지만 보기
                   <input type="checkbox" id="unreadMessagesCheckbox" name="">
                 </label>
-              </div>
+              </div> {% endcomment %}
             </div>
           </div>
           <!-- 채팅 리스트 -->
@@ -44,24 +44,25 @@
                 <div>
                   {% if chat.sender_id == request.user.id %}
                   <div class="flex-box">
-                    <p class="bold">{{chat.receiver.username}}</p>
+                    <p class="bold" id="user-name">{{chat.receiver.username}}</p>
                     <p class="s-text">{{chat.receiver.region}}</p>
-                    <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                    <p class="s-text">{{chat.last_message.timestamp|format_date}}</p>
                   </div>
                   {% else %}
                   <div class="flex-box">
-                    <p class="bold">{{chat.sender.username}}</p>
+                    <p class="bold" id="user-name">{{chat.sender.username}}</p>
                     <p class="s-text">{{chat.sender.region}}</p>
-                    <p class="s-text">{{chat.timestamp|format_upload_date}}</p>
+                    <p class="s-text">{{chat.last_message.timestamp|format_date}}</p>
                   </div>
                   {% endif %}
-                  <p class="chat-thumb-text">마지막 채팅 필요</p>
+                  <p class="chat-thumb-text">{{chat.last_message.content|get_after_colon}}</p>
                 </div>
                 <div class="thumbnail-box">
                   <img src="{{ MEDIA_URL }}{{ chat.item.image_url }}" alt="{{ chat.item.title }}">
                 </div>
               </div>
             </a>
+            <p id="room-name" style="display:none">{{ room.chat_id }}</p>
             {% endfor %}
             <script>
               // 현재 페이지의 URL을 가져옵니다
@@ -81,6 +82,90 @@
             </script>
           </div>
         </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+        
+            // 주소에서 룸번호 찾기
+            const roomName = document
+              .getElementById('room-name')
+              .textContent
+              .trim();
+        
+            // 유저 id 찾기
+            const userName = document
+              .getElementById('user-name')
+              .textContent
+              .trim();
+        
+
+            // 웹소켓설정
+            const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+        
+            //메세지 실시간으로 채팅창에 넣음
+            chatSocket.onmessage = function (e) {
+              const data = JSON.parse(e.data);
+        
+              // 메시지의 발신자가 현재 사용자인지 확인
+              const isFromMe = data.username === userName;
+        
+              // 메시지 박스의 CSS 클래스를 설정
+              const messageClass = isFromMe ? "from-me" : "";
+        
+              // 메시지 박스를 동적으로 생성하고 페이지에 추가
+              if (!isFromMe) {
+                // 메시지 박스의 CSS 클래스를 설정
+                const messageClass = isFromMe ? "from-me" : "";
+              
+                // 메시지 박스를 동적으로 생성하고 페이지에 추가
+                let chatLogTest = document.getElementById("chat-log");
+                chatLogTest.innerHTML += `<div class="message-box ${messageClass}">
+                  <div class="message-text">${data.message}</div><p style="font-size: 11px">${data.timestamp}</p>
+                </div>`;
+              }
+              else{
+                // 메시지 박스의 CSS 클래스를 설정
+                const messageClass = isFromMe ? "from-me" : "";
+
+                // 메시지 박스를 동적으로 생성하고 페이지에 추가
+                let chatLogTest = document.getElementById("chat-log");
+                chatLogTest.innerHTML += `<div class="message-box ${messageClass}">
+                  <p style="font-size: 11px">${data.timestamp}</p><div class="message-text">${data.message}</div>
+                </div>`;
+              }
+              }
+            chatSocket.onclose = function (e) {
+              console.error('Chat socket closed unexpectedly');
+            };
+        
+            // 채팅창에 키 들어가있도록 함
+            document
+              .querySelector('#chat-message-input')
+              .focus();
+        
+            // 채팅 전송
+            document
+              .querySelector('#chat-message-input')
+              .onkeyup = function (e) {
+                if (e.keyCode === 13 && this.value.trim() !== '') { // enter, return and input value is not empty
+                  document
+                    .querySelector('#chat-message-submit')
+                    .click();
+                }
+              };
+        
+            document
+              .querySelector('#chat-message-submit')
+              .onclick = function (e) {
+                e.preventDefault();
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const message = messageInputDom.value;
+                const now = new Date();
+                const timestamp = now.getHours() + "시" + now.getMinutes() + "분";
+                chatSocket.send(JSON.stringify({ 'username': userName, 'message': message, 'timestamp': timestamp }));
+                messageInputDom.value = '';
+              };
+          }); 
+        </script>
 
 
         {% if room is None %}
@@ -99,13 +184,20 @@
                   {{room.sender.username}} <!-- 사용자 아이디를 표시할 곳 -->
                   {% endif %}
                 </div>
+                {% if room is not None %}
+                {% if room.item.seller_name == request.user %}
                 <div class="temp">
-                  36.9도
+                  구매자
                 </div>
+                {% else %}
+                <div class="temp">
+                  판매자
+                </div>
+                {% endif %}
               </div>
               <!--물품정보-->
               <div class="goods-box flex-box between">
-                {% if room is not None %}
+                
                 <a href="{% url 'trade_post' item_id=room.item_id %}">
                   <div class="flex-box">
                     <div class="selected-thumbnail-box">
@@ -153,7 +245,7 @@
               {% endif %}
             </div>
             <!--채팅창 메인-->
-            <div class="chat-container">
+            <div class="chat-container" id="chat-log">
               <!-- 메시지가 표시될 곳 -->
             </div>
           </div>
@@ -166,10 +258,10 @@
                 </div>
               </form>
             {% else %}
-              <form class="chat-input" action="submit">
-                <textarea name="" cols="30" rows="10" placeholder="채팅을 입력해주세요."></textarea>
+              <form class="chat-input">
+                <textarea name="" id="chat-message-input" cols="30" rows="10" placeholder="채팅을 입력해주세요."></textarea>
                 <div>
-                  <button>전송</button>
+                  <button id="chat-message-submit">전송</button>
                 </div>
               </form>
             {% endif %}
@@ -177,6 +269,24 @@
         </div>
       </div>
     </div>
+    <script>
+      // 스크롤 요소의 ID를 선택하고 해당 요소를 가져옵니다.
+      const scrollElement = document.querySelector('.chat-container');
+
+      // 스크롤 요소의 맨 아래로 스크롤하는 함수를 정의합니다.
+      function scrollToBottom() {
+        scrollElement.scrollTop = scrollElement.scrollHeight;
+      }
+
+      // Mutation Observer를 생성합니다.
+      const observer = new MutationObserver(scrollToBottom);
+
+      // Observer를 설정하여 스크롤 요소의 하위 요소에 대한 변경을 감지합니다.
+      observer.observe(scrollElement, { childList: true, subtree: true });
+
+      // 페이지 로드 시 스크롤 요소를 맨 아래로 스크롤합니다.
+      window.onload = scrollToBottom;
+    </script>
     {% include 'footer.html' %}
 </body>
 

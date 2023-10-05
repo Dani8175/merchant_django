@@ -1,5 +1,7 @@
 from django.urls import path, include
 from django.conf.urls.static import static
+
+from . import consumers
 from . import views
 from django.conf import settings
 from django.contrib.auth import views as auth_views
@@ -13,6 +15,7 @@ urlpatterns = [
     path(r"register/", views.register_view, name="register"),
     path(r"chat/", views.chat, name="chat"),
     path(r"chat/<str:room_num>/", views.chat, name="chat"),
+    path('ws/chat/<str:room_num>/', consumers.ChatConsumer.as_asgi()),
     path(r"location/", views.location, name="location"),
     path(r"search/", views.search, name="search"),
     path(r"trade/", views.trade, name="trade"),
