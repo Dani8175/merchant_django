@@ -3,7 +3,7 @@
     background-color: #fff;
     height: 225px;
     display: flex;
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     margin-top: 60px;
 }
 
@@ -22,4 +22,12 @@
     border: none;
     border-radius: 8px;
     font-weight: 700;
+}
+
+a {
+    text-decoration-line: none;
+}
+
+.footer a:visited {
+    color : black;
 }

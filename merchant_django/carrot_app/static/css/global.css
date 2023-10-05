@@ -1,5 +1,5 @@
 *{
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 button, a, link{
@@ -18,7 +18,7 @@ button, a, link{
     justify-content: center;
     margin: auto;
     gap: 20px;
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .block-box{

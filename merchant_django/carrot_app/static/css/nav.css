@@ -9,7 +9,7 @@ nav{
     z-index: 999;
     color: #f9f8f4;
     text-decoration: none;
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     padding: 14px 0;
 }
 
@@ -36,6 +36,7 @@ nav{
     padding: 6px 16px;
     text-decoration: none;
     border: 1px solid #d7d7d7;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .orange{
