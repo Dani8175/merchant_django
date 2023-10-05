@@ -33,22 +33,29 @@ def main(request):
     return render(request, "main.html", {"posts": posts})
 
 
+@login_required
 def chat(request, room_num=None):
     chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id)).order_by(
         "-timestamp"
     )
-    if room_num is not None:
-        room = get_object_or_404(Chat, chat_id=room_num)
-        if request.method == "POST":
-            room.item.is_end = True
-            room.item.save()
-            room.save()
-            return redirect("chat", room.chat_id)
-    else:
-        room = None
 
-    if not chats:
-        chats = None  # 채팅이 없는 경우에는 chats 변수를 None으로 설정하여 링크 생성을 방지
+    user_profile = CustomUser.objects.get(username=request.user)
+
+    if user_profile.region is None:
+        return redirect("alert", alert_message="동네인증이 필요합니다.")
+    else:
+        if room_num is not None:
+            room = get_object_or_404(Chat, chat_id=room_num)
+            if request.method == "POST":
+                room.item.is_end = True
+                room.item.save()
+                room.save()
+                return redirect("chat", room.chat_id)
+        else:
+            room = None
+
+        if not chats:
+            chats = None  # 채팅이 없는 경우에는 chats 변수를 None으로 설정하여 링크 생성을 방지
 
     return render(request, "chat.html", {"chats": chats, "room": room})
 
@@ -140,10 +147,11 @@ def extract_post_number(url):
 def trade_post(request, item_id):
     item = Item.objects.get(item_id=item_id)
 
-    try:
-        reverse_chat = Chat.objects.get(Q(item_id=item_id) & Q(sender=request.user))
-    except Chat.DoesNotExist:
-        reverse_chat = None
+    if request.user.is_authenticated:
+        try:
+            reverse_chat = Chat.objects.get(Q(item_id=item_id) & Q(sender=request.user))
+        except Chat.DoesNotExist:
+            reverse_chat = None
 
     last_view_time_str = request.session.get(f"last_view_time_{item_id}")
     current_time = datetime.datetime.now()
@@ -159,18 +167,26 @@ def trade_post(request, item_id):
         item.delete()
         return redirect("trade")
     elif request.method == "POST" and "urlPart" in request.POST:
-        url_part = request.POST.get("urlPart")
-        post_number = extract_post_number(url_part)
+        if request.user.is_authenticated:
+            url_part = request.POST.get("urlPart")
+            post_number = extract_post_number(url_part)
 
-        chats = Chat.objects.filter(item_id=post_number, sender=request.user)
-        if not chats.exists():
-            Chat.objects.create(item_id=post_number, sender=request.user, receiver=item.seller_name)
+            chats = Chat.objects.filter(item_id=post_number, sender=request.user)
+            if not chats.exists():
+                Chat.objects.create(
+                    item_id=post_number, sender=request.user, receiver=item.seller_name
+                )
 
-        # request.session["post_number"] = post_number
+            # request.session["post_number"] = post_number
 
-        return redirect("chat")
+            return redirect("chat")
+        else:
+            return redirect("alert", alert_message="로그인이 필요합니다.")
 
-    return render(request, "trade_post.html", {"item": item, "reverse_chat": reverse_chat})
+    if request.user.is_authenticated:
+        return render(request, "trade_post.html", {"item": item, "reverse_chat": reverse_chat})
+    else:
+        return render(request, "trade_post.html", {"item": item})
 
 
 def write(request):
