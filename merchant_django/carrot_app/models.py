@@ -123,6 +123,7 @@ class Chat(models.Model):
         CustomUser, on_delete=models.DO_NOTHING, related_name="receiver_name"
     )
     timestamp = models.DateTimeField(auto_now_add=True)
+    last_message = models.OneToOneField('Message', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = "Chat"
@@ -157,7 +158,7 @@ class ChatRoom(models.Model):
 
 
 class Message(models.Model):
-    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="messages")
+    chatroom = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="authored_messages"
     )

@@ -1,6 +1,7 @@
+from datetime import datetime, timedelta
 from django import template
 from django.utils import timezone
-
+import pytz
 
 # from bs4 import BeautifulSoup
 import re
@@ -70,3 +71,40 @@ def add_commas(number):
 def mask_and_truncate_password(password, length=8):
     masked_password = "*" * len(password)
     return masked_password[:length]
+
+
+@register.filter
+def get_after_colon(value):
+    if ":" in value:
+        return value.split(":")[1].strip()
+    else:
+        return value
+
+
+@register.filter
+def format_date(value):
+    if isinstance(value, datetime):
+        # Convert the datetime to the local timezone
+        local_timezone = pytz.timezone("Asia/Seoul")  # Replace with your local timezone
+        value = value.astimezone(local_timezone)
+
+        time_since = datetime.now(pytz.utc) - value
+        days = time_since.days
+        seconds = time_since.seconds
+
+        if days >= 365:
+            return f"{days // 365}년전"
+        elif days >= 30:
+            return f"{days // 30}달전"
+        elif days >= 7:
+            return f"{days // 7}주전"
+        elif days > 0:
+            return f"{days}일 전"
+        elif seconds >= 3600:
+            return f"{seconds // 3600}시간전"
+        elif seconds >= 60:
+            return f"{seconds // 60}분전"
+        else:
+            return "방금전"
+
+    return value
