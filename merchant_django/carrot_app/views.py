@@ -15,7 +15,7 @@ import openai
 import json
 from django.views import View
 from django.utils.decorators import method_decorator
-
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
@@ -34,9 +34,16 @@ def main(request):
 
 
 def chat(request, room_num=None):
-    chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id))
+    chats = Chat.objects.filter(Q(receiver=request.user.id) | Q(sender=request.user.id)).order_by(
+        "-timestamp"
+    )
     if room_num is not None:
         room = get_object_or_404(Chat, chat_id=room_num)
+        if request.method == "POST":
+            room.item.is_end = True
+            room.item.save()
+            room.save()
+            return redirect("chat", room.chat_id)
     else:
         room = None
 
@@ -85,9 +92,20 @@ def search(request):
     )
 
 
+def update_chat_count(request):
+    # chat 테이블에서 item_id가 동일한 항목들을 찾아서 count
+    chat_count_by_item = Chat.objects.values("item_id").annotate(chat_count=Count("item_id"))
+
+    # item 테이블의 chat_count 컬럼에 값 업데이트
+    for chat in chat_count_by_item:
+        item_id = chat["item_id"]
+        chat_count = chat["chat_count"]
+        Item.objects.filter(item_id=item_id).update(chat_count=chat_count)
+
+
 def trade(request):
     sort = request.GET.get("sort")  # sort 값 가져오기
-
+    update_chat_count(request)
     # sort 값에 따른 처리 로직 작성
     if sort == "latest":
         # 최신순으로 정렬하는 로직 작성

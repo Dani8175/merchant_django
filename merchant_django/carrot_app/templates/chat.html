@@ -138,7 +138,17 @@
                 </div>
                 {% comment %} </a> {% endcomment %}
                 {% endif %}
-                <button>거래완료</button>
+                {% if room.item.is_end == False %}
+                  {% if room.receiver_id == request.user.id %}
+                  <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="end_item_id" value="{{ room.item_id }}">
+                    <button type="submit">거래완료</button>
+                  </form>
+                  {% endif %}
+                {% else %}
+                  <p>거래완료된 상품입니다</p>
+                {% endif %}
               {% endif %}
             </div>
             <!--채팅창 메인-->
@@ -147,12 +157,21 @@
             </div>
           </div>
           {% if room is not None %}
-          <form class="chat-input" action="submit">
-            <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
-            <div>
-              <button>전송</button>
-            </div>
-          </form>
+            {% if room.item.is_end == True %}
+              <form class="chat-input" action="submit">
+                <textarea name="" style="background-color: white;" cols="30" rows="10" placeholder="거래완료된 상품으로 채팅을 보낼 수 없어요" disabled></textarea>
+                <div>
+                  <button disabled>전송</button>
+                </div>
+              </form>
+            {% else %}
+              <form class="chat-input" action="submit">
+                <textarea name="" cols="30" rows="10" placeholder="채팅을 입력해주세요."></textarea>
+                <div>
+                  <button>전송</button>
+                </div>
+              </form>
+            {% endif %}
           {% endif %}
         </div>
       </div>
