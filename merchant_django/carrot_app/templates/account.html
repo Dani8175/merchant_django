@@ -23,7 +23,7 @@
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
             padding: 10px !important;
-            margin: 0 170px;
+            margin: 25px 170px;
             justify-content: center;
         }
 
@@ -75,7 +75,7 @@
     {% include 'nav.html' %}
     <main>
         <div class="content_box" style="margin-bottom: -30px; margin-top: 100px;">
-            <h1 class="account_h1">계정</h1>
+            {% comment %} <h1 class="account_h1">계정</h1> {% endcomment %}
             <div class="account_info">
                 <div class="main_info">
                     <h2>계정정보</h2>
@@ -91,18 +91,18 @@
                 <div>
                     <div style="text-align: center; display: flex; justify-content: space-between;">
                         <div style="display: inline-block;">
-                            <p class="exclude" >PS:   {{ user.password|mask_and_truncate_password:8 }} </p>
+                            <p class="exclude" >PW:   {{ user.password|mask_and_truncate_password:8 }} </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div style="margin-top: 70px;">
-            <h1 class="content_list" style="color: #fa6616; margin-bottom:-40px;">내 게시물 목록</h1>
+            <h1 class="content_list" style="color: #fa6616; margin-bottom:-40px; font-size: 33px">내 게시물 목록</h1>
             <ul class="post-list" >
                 <div class="post-container">
                     {% for post in posts %}
-                        <li class="post_card" style="display: flex; align-items: center; border">
+                        <li class="post_card" style="display: flex; align-items: center; margin-right: 20px;">
                                 <a href="{% url 'trade_post' item_id=post.item_id %}" style="color: black; text-decoration: none;">
                                 <img src="{{ MEDIA_URL }}{{ post.image_url }}" alt="{{ post.title }}" class="pic" style="padding-top:0">
                                 {% comment %} <img src="{% static "img/end-post.png" %}" class=""> {% endcomment %}
@@ -120,10 +120,10 @@
                                 {% comment %} <p class="bold">{{ post.price }}</p> {% endcomment %}
                                 <p>{{ post.hope_loc }}</p>
                                 <div class="flex-box">
-                                <p style="font-size: 20px;">조회
+                                <p style="">조회
                                     {{ post.views }}</p>
-                                <p>·</p>
-                                <p style="font-size: 20px;">채팅
+                                <p style="margin: 10px -5px 10px -5px;">·</p>
+                                <p style="">채팅
                                     {{ post.chat_count }}</p>
                                 </a>
                         </li>
@@ -134,6 +134,7 @@
             </ul>
         </div>
     </main>
+    {% include 'footer.html' %}
 </body>
 
 </html>

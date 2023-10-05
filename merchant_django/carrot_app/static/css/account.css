@@ -3,7 +3,6 @@ body {
     border-radius: 4px;
     display: flex;
     flex-flow: column;
-    margin-bottom: 32px;
 }
 
 .content_box {
@@ -27,15 +26,13 @@ body {
 }
 
 .main_info {
-    border: 1px solid #fa6616;
-    ;
-    border-radius: 5px;
-    width: 500px;
+    width: 350px;
     margin-top: 10px;
     /* 위쪽 간격 설정 */
     margin-bottom: 10px;
     /* 아래쪽 간격 설정 */
-    background-color: #313131;
+    font-weight: 700;
+    border-bottom: 1px solid black;
 }
 
 h2 {
@@ -43,13 +40,19 @@ h2 {
     margin-bottom: 10px;
     text-align: center;
     font-size: 20px;
-    color: #f8f9fa;
-    border-radius: 3px;
+    color: #fa6616;
+    
+}
+
+.exclude
+{
+    margin: 10px;
 }
 
 p {
     font-size: 14px;
     margin: 10px;
+    margin-bottom: 0px;
 }
 
 button {

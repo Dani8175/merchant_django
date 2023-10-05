@@ -1,6 +1,4 @@
-.flex-box{
-    margin-top: 7px;
-}
+
 
 .primary-button{
     padding: 16px;
@@ -34,6 +32,8 @@
     width:80%;
     padding:14px;
     border-radius: 2px;
+    margin-right: 23px;
+    font-size: 15px;
 }
 
 .region-input button{

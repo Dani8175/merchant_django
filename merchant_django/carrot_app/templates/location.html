@@ -34,7 +34,7 @@
           {% comment %} <label for="region-setting">내 동네 설정</label> {% endcomment %}
           <form method="POST" action="/set_region/" id="region-form">
             {% csrf_token %}
-            <div class="flex-box full-box between region-input">
+            <div class="full-box between region-input" style="margin-top: 14px">
               {% comment %} <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{{ region }}"> {% endcomment %}
               <input type="text" id="region-setting" class="region-setting" name="region-setting" placeholder="예) 서울 강서구 화곡동" value="{% if region %}{{ region }}{% endif %}">
               <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
