@@ -34,6 +34,9 @@
         <div class="container column center">
           <div class="full-box trade-box column">
             <div class="flex-box full-box card-container between">
+              {% if searched_items|length == 0 %}
+              <h3>검색결과가 없습니다</h3>
+              {% else %}
               {% for searched_item in searched_items %}
               <div class="card-box">
                 {% comment %} {% if item_id %} {% endcomment %}
@@ -75,6 +78,7 @@
                 </a>
               </div>
             {% endfor %}
+            {% endif %}
 
             </div>
           </div>
