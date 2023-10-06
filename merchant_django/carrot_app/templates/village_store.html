@@ -9,30 +9,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=services"></script>
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ded5d865153cd7267f3afc571d2f664&libraries=services"></script>
+
     <title>village_store</title>
 </head>
 
 <body>
     {% include 'nav.html' %}
 
-    <div style="display: flex;flex-direction: column;">
+    <div style="margin-top: 60px;">
         <div>
             <section class="title_background">
-                <div style="margin-top: 60px;">
-                    <h1 class="title_h1" style="order: 1">동네 이웃들이
-                        <br>
-                        자주가는 동네 가게
-                    </h1>
-                    <span class="title  _span"
-                        style="display: block; margin: 1rem 0 0; margin-left: 325px; font-size: 22px;line-height: normal;">
-                        우리동네 사람들이
-                        <br>
-                        이용하는 가게를 찾아보세요.
-                    </span>
+                <div>
+                    <div style="display: inline-block; margin-top: 80px; margin-left: 50px;">
+                        <h1 class="title_h1" style="order: 1">동네 이웃들이
+                            <br>
+                            자주가는 동네 가게
+                        </h1>
+                        <span class="title  _span"
+                            style="display: block; margin: 1rem 0 0; margin-left: 203px; font-size: 22px;line-height: normal;">
+                            우리동네 사람들이
+                            <br>
+                            이용하는 가게를 찾아보세요.
+                        </span>
+                    </div>
                     <div>
                         <span class="title_img">
                             <img class="nearby_stores" src="{% static 'img/nearby_stores_hero_image.png' %}"
@@ -43,13 +47,15 @@
             </section>
         </div>
         <div class="main" style="order: 2;">
+            <div id="map"></div>
             <section style="margin-top: 35px;">
                 <h2 class="main_h2">다양한 동네 가게를 볼 수 있어요</h2>
-                <div class="menu_div" style="">
+                <div class="menu_div">
                     <ul class="menu1">
+
                         <li>
-                            <label class="menu_label" style="background-color: #303030; color: #f8f9fa;">전체
-                                <input class="menu_input">
+                            <label class="menu_label">전체
+                                <input type=" radio" class="menu_input">
                             </label>
                         </li>
                         <li>
@@ -63,17 +69,17 @@
                             </label>
                         </li>
                         <li>
-                            <label class="menu_label">용달/이사
+                            <label class="menu_label">부동산
                                 <input type="radio" class="menu_input">
                             </label>
                         </li>
                         <li>
-                            <label class="menu_label">뷰티/미용
+                            <label class="menu_label">마트
                                 <input type="radio" class="menu_input">
                             </label>
                         </li>
                         <li>
-                            <label class="menu_label1">헬스/필라테스/요가
+                            <label class="menu_label1">편의점
                                 <input type="radio" class="menu_input" style="width: 180px;">
                             </label>
                         </li>
@@ -84,7 +90,7 @@
                         <a>
                             <div>
                                 <div>
-                                    <img>
+                                    <img src="/static/img/kakao.png" alt="이미지" style="width: 100px; height: 100px;">
                                 </div>
                             </div>
                             <div>
@@ -107,15 +113,26 @@
                 <div id="map"></div>
             </section>
         </div>
+        <section class="last">
+            <div>
+                <span>
+                    <img class="last_img" src="{% static 'img/ic_category_town_colored_m.13979d69.png' %}" alt=""
+                        style="width: 100px;">
+                </span>
+            </div>
+            <div>
+                <h6>가게를 운영하고 계신가요?</h6>
+                <span class="last_span">당근에 등록하고 이웃에게 알려보세요!</span>
+            </div>
+            <div class="real_last">
+                <a class="last_a">비즈 프로필 만들기</a>
+            </div>
+        </section>
     </div>
-    <!-- <script type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=LIBRARY"></script> -->
-
-    <!-- <script type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=34201c357e8ab8d9428097e2085e41d2&libraries=services,clusterer,drawing"></script> -->
+    <a style="border-bottom: 1px solid ;"></a>
+    {% include 'footer.html' %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
+    <script src="{% static 'js/village_store.js' %}"></script>
 </body>
 
 </html>
