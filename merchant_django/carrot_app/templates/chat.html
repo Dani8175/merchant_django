@@ -210,7 +210,8 @@
                       <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
                     </div>
                     <div class="goods-info-box">
-                      <p>{{room.item.title}}</p>
+                      <h2 style="font-size: 18px; font-weight: 500;">{{room.item.title}}</h2>
+                      <p>{{room.item.price |add_commas}}원</p>
                       {% if room.sender_id == request.user.id %}
                       {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
                       {% else %}
@@ -226,7 +227,8 @@
                       <img src="{{ MEDIA_URL }}{{ room.item.image_url }}" alt="{{ room.item.title }}">
                     </div>
                     <div class="goods-info-box">
-                      <p>{{room.item.title}}</p>
+                      <h2 style="font-size: 18px; font-weight: 500;">{{room.item.title}}</h2>
+                      <p>{{room.item.price |add_commas}}원</p>
                       {% if room.sender_id == request.user.id %}
                       {{room.receiver.region}} <!-- 사용자 아이디를 표시할 곳 -->
                       {% else %}
