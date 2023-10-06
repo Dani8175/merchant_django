@@ -46,17 +46,18 @@
             <!-- 클릭 시 채팅창 열기 -->
             {% for chat in chats %}
             <a href="{% url 'chat' room_num=chat.chat_id %}" class="chatlink">
+              <p style="display:none" id="user-name">{{request.user}}</p>
               <div class="flex-box chat-box between user-chat-button" data-user-id="1">
                 <div>
                   {% if chat.sender_id == request.user.id %}
                   <div class="flex-box">
-                    <p class="bold" id="user-name">{{chat.receiver.username}}</p>
+                    <p class="bold">{{chat.receiver.username}}</p>
                     <p class="s-text">{{chat.receiver.region}}</p>
                     <p class="s-text">{{chat.last_message.timestamp|format_date}}</p>
                   </div>
                   {% else %}
                   <div class="flex-box">
-                    <p class="bold" id="user-name">{{chat.sender.username}}</p>
+                    <p class="bold">{{chat.sender.username}}</p>
                     <p class="s-text">{{chat.sender.region}}</p>
                     <p class="s-text">{{chat.last_message.timestamp|format_date}}</p>
                   </div>
